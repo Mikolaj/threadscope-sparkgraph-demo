@@ -39,8 +39,7 @@ main = do
              created, "created", converted, "converted",
              rem, "remaining", overflowed, "overflowed",
              dud, "dud", gcd, "GC", "d", fizzled, "fizzled"] =
-        Just $
-          [time, created, dud, overflowed, converted, gcd, fizzled, rem]
+        Just [time, created, dud, overflowed, converted, gcd, fizzled, rem]
       parse _ = Nothing
 
       -- Differential quotients. TODO: Int too small?
@@ -50,14 +49,23 @@ main = do
          [time2, created2, dud2, overflowed2, converted2, gcd2, fizzled2, rem2])
         =
         let delta = time2 - time1
-        in [time2 % 1000000,
+        in [-- for gnuplot math (TODO: the very last sample point is lost)
+            time1 % 1,
+            created1 % 1,
+            dud1 % 1,
+            overflowed1 % 1,
+            converted1 % 1,
+            gcd1 % 1,
+            fizzled1 % 1,
+            rem1 % 1,
+            -- math performed in Haskell (differential quotient)
+            time2 % 1000000,
             1000000 * (created2 - created1) % delta,
             1000000 * (dud2 - dud1) % delta,
             1000000 * (overflowed2 - overflowed1) % delta,
             1000000 * (converted2 - converted1) % delta,
             1000000 * (gcd2 - gcd1) % delta,
-            1000000 * (fizzled2 - fizzled1) % delta,
-            rem2 % 1]
+            1000000 * (fizzled2 - fizzled1) % delta]
 
       dQ :: [[Integer]] -> [[Rational]]
       dQ l = map diffQuot $ zip l (tail l)
