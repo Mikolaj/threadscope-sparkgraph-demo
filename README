@@ -1,0 +1,35 @@
+# to see the plots do (with sufficiently patched ghc)
+
+cd ghc-events
+cabal install
+cd ..
+
+ghc -O -eventlog -rtsopts parlist.hs --make -threaded
+
+./parlist +RTS -N2 -ls; show-ghc-events parlist.eventlog > output.dat
+
+gnuplot
+
+load "pool_size.plt"
+
+load "creation_cumulative.plt"
+
+load "disposal_cumulative.plt"
+
+load "creation_speed.plt"
+
+load "disposal_speed.plt"
+
+load "cr_local_speed.plt"
+
+load "di_local_speed.plt"
+
+# to generate the plots, do, e.g.,
+
+set term pngcairo size 800,600
+
+# and repeat the loads, naming the pictures before each, as in
+
+set output "pool_size.png"
+
+# at one point I also needed "set yrange 1100" for pool_size.plt
