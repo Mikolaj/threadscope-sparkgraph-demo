@@ -13,6 +13,7 @@ import System.IO
 import System.Exit
 import qualified Data.Char as Char
 import qualified Data.Maybe as Maybe
+import Data.Ratio
 
 main = do
   [file] <- getArgs
@@ -36,12 +37,33 @@ main = do
       parse :: [String] -> Maybe [String]
       parse [time, "cap", "0", "spark", "stats",
              created, "created", converted, "converted",
-             remaining, "remaining", overflowed, "overflowed",
+             rem, "remaining", overflowed, "overflowed",
              dud, "dud", gcd, "GC", "d", fizzled, "fizzled"] =
-        Just
-          [time, created, dud, overflowed, converted, gcd, fizzled, remaining]
+        Just $
+          [time, created, dud, overflowed, converted, gcd, fizzled, rem]
       parse _ = Nothing
 
-  putStrLn $ unlines $ map unwords $ Maybe.catMaybes $ map parse l
+      -- Differential quotients. TODO: Int too small?
+      diffQuot :: ([Integer], [Integer]) -> [Rational]
+      diffQuot
+        ([time1, created1, dud1, overflowed1, converted1, gcd1, fizzled1, rem1],
+         [time2, created2, dud2, overflowed2, converted2, gcd2, fizzled2, rem2])
+        =
+        let delta = time2 - time1
+        in [time2 % 1000000,
+            1000000 * (created2 - created1) % delta,
+            1000000 * (dud2 - dud1) % delta,
+            1000000 * (overflowed2 - overflowed1) % delta,
+            1000000 * (converted2 - converted1) % delta,
+            1000000 * (gcd2 - gcd1) % delta,
+            1000000 * (fizzled2 - fizzled1) % delta,
+            rem2 % 1]
+
+      dQ :: [[Integer]] -> [[Rational]]
+      dQ l = map diffQuot $ zip l (tail l)
+
+  putStrLn $ unlines $ map unwords $
+    map (map ((show :: Double -> String) . fromRational)) $
+    dQ $ map (map read) $ Maybe.catMaybes $ map parse l
 
 die s = do hPutStrLn stderr s; exitWith (ExitFailure 1)
