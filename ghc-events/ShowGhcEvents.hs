@@ -49,17 +49,7 @@ main = do
          [time2, created2, dud2, overflowed2, converted2, gcd2, fizzled2, rem2])
         =
         let delta = time2 - time1
-        in [-- for gnuplot math (TODO: the very last sample point is lost)
-            time1 % 1,
-            created1 % 1,
-            dud1 % 1,
-            overflowed1 % 1,
-            converted1 % 1,
-            gcd1 % 1,
-            fizzled1 % 1,
-            rem1 % 1,
-            -- math performed in Haskell (differential quotient)
-            time2 % 1000000,
+        in [time2 % 1000000,
             1000000 * (created2 - created1) % delta,
             1000000 * (dud2 - dud1) % delta,
             1000000 * (overflowed2 - overflowed1) % delta,
@@ -68,7 +58,22 @@ main = do
             1000000 * (fizzled2 - fizzled1) % delta]
 
       dQ :: [[Integer]] -> [[Rational]]
-      dQ l = map diffQuot $ zip l (tail l)
+      dQ l =
+        let raw =
+              -- for gnuplot math (TODO: the very last sample point is lost)
+              map (map toRational) l
+            differentialQuotient =
+              -- one element shorter than l
+              map diffQuot $ zip l (tail l)
+            aggregatedRemaining =
+              -- TODO: nothing aggregated yet
+              -- ASSUMPTION: we zoom out, that is: the original sample points
+              -- are less numerous than time divided by aggregation interval;
+              -- hence aggregatedRemaining is shorter than l
+              -- HACK: padded with dummy data so as not to truncate other lists
+              map (\ r -> [head r, last r]) raw ++ repeat [0, 0]
+        in zipWith3 (\ l1 l2 l3 -> l1 ++ l2 ++ l3)
+             raw differentialQuotient aggregatedRemaining
 
   putStrLn $ unlines $ map unwords $
     map (map ((show :: Double -> String) . fromRational)) $
