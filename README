@@ -19,19 +19,20 @@ ghc -O -eventlog -rtsopts parlist.hs --make -threaded
 
 gnuplot
 
+# TODO: make it zoom out better (max, min, mean, median, all)
 load "pool_size.plt"
 
-load "creation_cumulative.plt"
-
-load "disposal_cumulative.plt"
-
-load "creation_speed.plt"
-
-load "disposal_speed.plt"
-
+# TODO: make those zoom in (saw pattern) and zoom out (add increments) well
+# TODO: presentation (<@dcoutts> e.g. dud at bottom, created, overflow at top
+#                     black duds, green created and red overflows)
+# TODO: indicate somewhere than the area below the graph is the total
+# cumulated number of sparks created/disposed
 load "cr_local_speed.plt"
-
 load "di_local_speed.plt"
+
+# TODO: make >= 9 more plots: five zoomed out pool_size,
+# two zoomed out local speeds, two or more zoomed in local speeds with
+# different time intervals for resampling
 
 # to generate the plots, do, e.g.,
 
@@ -42,3 +43,13 @@ set term pngcairo size 800,600
 set output "png/pool_size.png"
 
 # at one point I also needed "set yrange 1100" for pool_size.plt
+
+# deprecated plots:
+
+# too much vertical space taken
+load "creation_cumulative.plt"
+load "disposal_cumulative.plt"
+
+# speed averaged over arbitrary, too big interval (from start to sample point)
+load "creation_speed.plt"
+load "disposal_speed.plt"
