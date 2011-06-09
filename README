@@ -1,4 +1,13 @@
-# to see the plots do (with sufficiently patched ghc)
+# This repo contains a snapshot of a version of ghc-events,
+# from http://code.haskell.org/~duncan/ghc-events/
+# and a copy of http://code.haskell.org/~duncan/parlist.hs
+# Both are slightly modified. It also contains plot scripts
+# generated using gnuplot (http://www.gnuplot.info/).
+# The ghc version required to compile the included ghc-events
+# is the one from http://darcs.haskell.org/~duncan/ghc/
+
+# Instructions:
+# to see the plots, do (using the right ghc version)
 
 cd ghc-events
 cabal install
