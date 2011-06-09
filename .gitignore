@@ -1,0 +1,7 @@
+dist/
+*~
+output.dat
+parlist
+*.eventlog
+*.hi
+*.o
