@@ -23,8 +23,7 @@ gnuplot
 load "pool_size.plt"
 
 # TODO: make those zoom in (saw pattern) and zoom out (add increments) well
-# TODO: presentation (<@dcoutts> e.g. dud at bottom, created, overflow at top
-#                     black duds, green created and red overflows)
+# TODO: colour (<@dcoutts> eg black duds, green created and red overflows)
 # TODO: indicate somewhere than the area below the graph is the total
 # cumulated number of sparks created/disposed
 load "cr_local_speed.plt"
@@ -34,9 +33,10 @@ load "di_local_speed.plt"
 # two zoomed out local speeds, two or more zoomed in local speeds with
 # different time intervals for resampling
 
+
 # to generate the plots, do, e.g.,
 
-set term pngcairo size 800,600
+set term pngcairo size 600, 300
 
 # and repeat the loads, naming the pictures before each, as in
 
