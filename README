@@ -39,6 +39,6 @@ set term pngcairo size 800,600
 
 # and repeat the loads, naming the pictures before each, as in
 
-set output "pool_size.png"
+set output "png/pool_size.png"
 
 # at one point I also needed "set yrange 1100" for pool_size.plt
