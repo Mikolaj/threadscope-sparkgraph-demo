@@ -50,6 +50,26 @@ diffQuot
         1000000 * (gcd2 - gcd1) % delta,
         1000000 * (fizzled2 - fizzled1) % delta]
 
+-- Aggregates data within consecutive intervals of length i
+-- according to function f. All values at sample points within a single
+-- interval are overwriiten with the aggregate produced by f. Intervals with
+-- no sample points inside don't contribute anything to the result.
+-- Hence, the input and output lists have the same length.
+-- This setup preserves information about density of sample points,
+-- but avoids solid blobs at extreme zoom out. When visualized at zoom levels
+-- where intervals do not collapse to a single point, the data is smoothed
+-- (e.g. locally averaged out, if f is mean).
+aggregatedRem :: Int ->
+                 ([Integer] -> Rational) ->
+                 [[Integer]] -> [[Rational]]
+aggregatedRem _i _f l =
+  let aggr = -- TODO: nothing aggregated yet
+        map (\ r -> [toRational $ last r]) l
+  in aggr
+
+i1 = 10
+f1 = undefined
+
 transform :: [[Integer]] -> [[Rational]]
 transform l =
   let raw =
@@ -59,12 +79,7 @@ transform l =
         -- one element shorter than l
         map diffQuot $ zip l (tail l)
       aggregatedRemaining =
-        -- TODO: nothing aggregated yet
-        -- ASSUMPTION: we zoom out, that is: the original sample points
-        -- are less numerous than time divided by aggregation interval;
-        -- hence aggregatedRemaining is shorter than l
-        -- HACK: padded with dummy data so as not to truncate other lists
-        map (\ r -> [head r, last r]) raw ++ repeat [0, 0]
+        aggregatedRem i1 f1 l -- TODO
   in zipWith3 (\ l1 l2 l3 -> l1 ++ l2 ++ l3)
        raw differentialQuotient aggregatedRemaining
 

@@ -143,5 +143,5 @@ set loadpath
 set fontpath
 set fit noerrorvariables
 GNUTERM = "wxt"
-plot "output.dat" using ($16/1000000):17 title "remaining" with lines
+plot "output.dat" using ($1/1000000):16 title "remaining" with lines
 #    EOF
