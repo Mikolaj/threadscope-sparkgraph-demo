@@ -36,7 +36,7 @@ parse [time, "cap", "0", "spark", "stats",
   Just [time, created, dud, overflowed, converted, gcd, fizzled, rem]
 parse _ = Nothing
 
--- Differential quotients. TODO: Int really too small?
+-- Difference quotients. TODO: Int really too small?
 diffQuot :: ([Integer], [Integer]) -> [Rational]
 diffQuot
   ([time1, created1, dud1, overflowed1, converted1, gcd1, fizzled1, rem1],
@@ -92,12 +92,13 @@ f3 l = replicate (length l) $ sum (map snd l) % genericLength l
 -- which is simple concepturally and computationally.
 -- TODO after aggregating spark transitions gives extra insights.
 
+
 transform :: [[Integer]] -> [[Rational]]
 transform l =
   let raw =
         -- for simple math in gnuplot (TODO: the very last sample point is lost)
         map (map toRational) l
-      differentialQuotient =
+      differenceQuotient =
         -- one element shorter than l
         map diffQuot $ zip l (tail l)
       lRem = map (\ r -> (head r, last r)) l
@@ -108,7 +109,7 @@ transform l =
         (aggregatedRem i2 f2 lRem)
         (aggregatedRem i3 f3 lRem)
   in zipWith3 (\ l1 l2 l3 -> l1 ++ l2 ++ l3)
-       raw differentialQuotient aggregatedRemaining
+       raw differenceQuotient aggregatedRemaining
 
 
 main = do
