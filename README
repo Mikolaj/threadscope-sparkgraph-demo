@@ -9,9 +9,7 @@
 # Instructions:
 # to see the plots, do (using the right ghc version)
 
-cd ghc-events
-cabal install
-cd ..
+cd ghc-events/; cabal install; cd ..
 
 ghc -O -eventlog -rtsopts parlist.hs --make -threaded
 
@@ -19,8 +17,11 @@ ghc -O -eventlog -rtsopts parlist.hs --make -threaded
 
 gnuplot
 
-# TODO: make it zoom out better (max, min, mean, median, all)
+# TODO: make it zoom out better (mean, median)
 load "pool_size.plt"
+load "pool_size_max.plt"
+load "pool_size_min.plt"
+load "pool_size_mean.plt"
 
 # TODO: make those zoom in (saw pattern) and zoom out (add increments) well
 # TODO: colour (<@dcoutts> eg black duds, green created and red overflows)
@@ -36,13 +37,13 @@ load "di_local_speed.plt"
 
 # to generate the plots, do, e.g.,
 
-set term pngcairo size 600, 300
+set term pngcairo size 600, 400
 
 # and repeat the loads, naming the pictures before each, as in
 
 set output "png/pool_size.png"
 
-# at one point I also needed "set yrange 1100" for pool_size.plt
+# at one point I also needed "set yrange [0:1100]" for pool_size.plt
 
 # deprecated plots:
 

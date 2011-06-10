@@ -59,16 +59,26 @@ diffQuot
 -- but avoids solid blobs at extreme zoom out. When visualized at zoom levels
 -- where intervals do not collapse to a single point, the data is smoothed
 -- (e.g. locally averaged out, if f is mean).
-aggregatedRem :: Int ->
-                 ([Integer] -> Rational) ->
-                 [[Integer]] -> [[Rational]]
-aggregatedRem _i _f l =
-  let aggr = -- TODO: nothing aggregated yet
-        map (\ r -> [toRational $ last r]) l
-  in aggr
+-- TODO: clean up the time units chaos
+aggregatedRem :: Integer ->
+                 ([Integer] -> [Rational]) ->
+                 [(Integer, Integer)] -> [Rational]
+aggregatedRem i f l =
+  let agg within end [] = []
+      agg within end l@((time, rem) : trs)
+        | time < end = agg (rem : within) end trs
+        | otherwise  = f within ++ agg [] (end + i) l
+  in agg [] 0 l
 
-i1 = 10
-f1 = undefined
+-- TODO: mean/median need time to be more accurate, min/max are OK as is.
+i0 = 10000000  -- no aggregation
+f0 = map toRational
+i1 = 10000000  -- max
+f1 l = replicate (length l) $ toRational $ maximum l
+i2 = 10000000  -- min
+f2 l = replicate (length l) $ toRational $ minimum l
+i3 = 10000000  -- mean
+f3 l = replicate (length l) $ sum l % genericLength l
 
 transform :: [[Integer]] -> [[Rational]]
 transform l =
@@ -78,8 +88,13 @@ transform l =
       differentialQuotient =
         -- one element shorter than l
         map diffQuot $ zip l (tail l)
+      lRem = map (\ r -> (head r, last r)) l
       aggregatedRemaining =
-        aggregatedRem i1 f1 l -- TODO
+        zipWith4 (\ v0 v1 v2 v3 -> [v0, v1, v2, v3])
+        (aggregatedRem i0 f0 lRem)
+        (aggregatedRem i1 f1 lRem)
+        (aggregatedRem i2 f2 lRem)
+        (aggregatedRem i3 f3 lRem)
   in zipWith3 (\ l1 l2 l3 -> l1 ++ l2 ++ l3)
        raw differentialQuotient aggregatedRemaining
 

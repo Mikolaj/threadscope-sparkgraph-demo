@@ -144,5 +144,5 @@ set fontpath
 set fit noerrorvariables
 GNUTERM = "wxt"
 set yrange [0:1100]
-plot "output.dat" using ($1/1000000):16 title "remaining" with lines
+plot "output.dat" using ($1/1000000):17 title "remaining" with lines
 #    EOF
