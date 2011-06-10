@@ -17,11 +17,16 @@ ghc -O -eventlog -rtsopts parlist.hs --make -threaded
 
 gnuplot
 
-# TODO: make it zoom out better (mean, median)
+# TODO: make it zoom out better; accurate, time-weighted mean left to do
 load "pool_size.plt"
 load "pool_size_max.plt"
 load "pool_size_min.plt"
 load "pool_size_mean.plt"
+
+load "pool_size_out.plt"
+load "pool_size_max_out.plt"
+load "pool_size_min_out.plt"
+load "pool_size_mean_out.plt"
 
 # TODO: make those zoom in (saw pattern) and zoom out (add increments) well
 # TODO: colour (<@dcoutts> eg black duds, green created and red overflows)
@@ -30,7 +35,7 @@ load "pool_size_mean.plt"
 load "cr_local_speed.plt"
 load "di_local_speed.plt"
 
-# TODO: make >= 9 more plots: five zoomed out pool_size,
+# TODO: make >= 4 more plots:
 # two zoomed out local speeds, two or more zoomed in local speeds with
 # different time intervals for resampling
 

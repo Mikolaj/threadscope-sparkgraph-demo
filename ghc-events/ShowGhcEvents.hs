@@ -70,7 +70,7 @@ aggregatedRem i f l =
         | otherwise  = f within ++ agg [] (end + i) l
   in agg [] 0 l
 
--- TODO: mean/median need time to be more accurate, min/max are OK as is.
+-- TODO: mean needs time to be more accurate, min/max are OK as is.
 i0 = 10000000  -- no aggregation
 f0 = map toRational
 i1 = 10000000  -- max
