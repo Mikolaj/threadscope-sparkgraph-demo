@@ -61,24 +61,36 @@ diffQuot
 -- (e.g. locally averaged out, if f is mean).
 -- TODO: clean up the time units chaos
 aggregatedRem :: Integer ->
-                 ([Integer] -> [Rational]) ->
-                 [(Integer, Integer)] -> [Rational]
+                 ([(Integer, Integer)] -> [Rational]) ->
+                  [(Integer, Integer)] -> [Rational]
 aggregatedRem i f l =
   let agg within end [] = []
       agg within end l@((time, rem) : trs)
-        | time < end = agg (rem : within) end trs
+        | time < end = agg ((time, rem) : within) end trs
         | otherwise  = f within ++ agg [] (end + i) l
   in agg [] 0 l
 
--- TODO: mean needs time to be more accurate, min/max are OK as is.
 i0 = 10000000  -- no aggregation
-f0 = map toRational
+f0 = map (toRational . snd)
 i1 = 10000000  -- max
-f1 l = replicate (length l) $ toRational $ maximum l
+f1 l = replicate (length l) $ toRational $ maximum (map snd l)
 i2 = 10000000  -- min
-f2 l = replicate (length l) $ toRational $ minimum l
-i3 = 10000000  -- mean
-f3 l = replicate (length l) $ sum l % genericLength l
+f2 l = replicate (length l) $ toRational $ minimum (map snd l)
+i3 = 10000000  -- unweghted mean
+f3 l = replicate (length l) $ sum (map snd l) % genericLength l
+-- For weighted mean, we'd like the following property:
+-- the area under the graph, for each interval,
+-- is equal to the area of the original, unaggregated graph
+-- (both graphs with points connected with straight lines).
+-- However, this property is hard to reconcile with property we already keep:
+-- that the distribution of sample points is the same as in the original data.
+-- A compromise might be to consider unequal intervals: from the first point
+-- of a given unit interval to the first point of the next unempty interval,
+-- and then duplicate data points at interval boundaries, one copy
+-- with the mean of values of the left interval, the other copy --- the right.
+-- In this way we'd get a graph in the form of unequal rectangle steps.
+-- which is simple concepturally and computationally.
+-- TODO after aggregating spark transitions gives extra insights.
 
 transform :: [[Integer]] -> [[Rational]]
 transform l =
