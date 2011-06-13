@@ -50,16 +50,17 @@ diffQuot
         1000000 * (gcd2 - gcd1) % delta,
         1000000 * (fizzled2 - fizzled1) % delta]
 
--- Aggregates data within consecutive intervals of length i
--- according to function f. All values at sample points within a single
--- interval are overwriiten with the aggregate produced by f. Intervals with
--- no sample points inside don't contribute anything to the result.
--- Hence, the input and output lists have the same length.
--- This setup preserves information about density of sample points,
+-- Aggregates data within an interval of length 2*i, centered around
+-- a sampling point, according to function f. The value at the sampling point
+-- is then be overwriiten with the aggregate produced by f. No intervals
+-- with no sample points inside contribute anything to the result,
+-- hence the input and output lists have the same length.
+-- This setup preserves information about the location of sampling points,
 -- but avoids solid blobs at extreme zoom out. When visualized at zoom levels
 -- where intervals do not collapse to a single point, the data is smoothed
 -- (e.g. locally averaged out, if f is mean).
 -- TODO: clean up the time units chaos
+-- TODO: reimplement accotding to new spec
 aggregatedRem :: Integer ->
                  ([(Integer, Integer)] -> [Rational]) ->
                   [(Integer, Integer)] -> [Rational]
@@ -76,22 +77,17 @@ i1 = 10000000  -- max
 f1 l = replicate (length l) $ toRational $ maximum (map snd l)
 i2 = 10000000  -- min
 f2 l = replicate (length l) $ toRational $ minimum (map snd l)
-i3 = 10000000  -- unweghted mean
+i3 = 10000000  -- mean
 f3 l = replicate (length l) $ sum (map snd l) % genericLength l
--- For weighted mean, we'd like the following property:
--- the area under the graph, for each interval,
--- is equal to the area of the original, unaggregated graph
--- (both graphs with points connected with straight lines).
--- However, this property is hard to reconcile with property we already keep:
--- that the distribution of sample points is the same as in the original data.
--- A compromise might be to consider unequal intervals: from the first point
--- of a given unit interval to the first point of the next unempty interval,
--- and then duplicate data points at interval boundaries, one copy
--- with the mean of values of the left interval, the other copy --- the right.
--- In this way we'd get a graph in the form of unequal rectangle steps.
--- which is simple concepturally and computationally.
--- TODO after aggregating spark transitions gives extra insights.
-
+-- Warning: this mean implementation is simple, readable and preserves
+-- information about local variations, but we don't have the following property:
+-- the area under the graph is equal to the area of the original,
+-- unaggregated graph (both graphs with points connected with straight lines).
+-- The reason is that we don't take time spans between sample points
+-- into account (see "snd"). In particular we ignore time spans
+-- in, possibly big, empty areas without any sample points.
+-- The more homogeneous the sampling points distribution,
+-- the closer we are to keeping the property.
 
 transform :: [[Integer]] -> [[Rational]]
 transform l =
