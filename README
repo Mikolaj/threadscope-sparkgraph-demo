@@ -30,9 +30,6 @@ gnuplot
 # And enter the following gnuplot directives.
 
 load "pool_size.plt"
-load "pool_size_max.plt"
-load "pool_size_min.plt"
-load "pool_size_mean.plt"
 load "pool_size_max_min_original.plt"
 load "pool_size_max_min_mean.plt"
 
