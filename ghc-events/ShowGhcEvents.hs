@@ -39,6 +39,8 @@ parse _ = Nothing
 -- Ordinary difference quotients.
 -- Bad, because data not continuous, so no derivative, so infinities and NaNs.
 diffQuot :: ([Integer], [Integer]) -> [Rational]
+diffQuot (start, end)
+  | head start == head end = map toRational [head start, 0, 0, 0, 0, 0, 0]
 diffQuot
   ([time1, created1, dud1, overflowed1, converted1, gcd1, fizzled1, rem1],
    [time2, created2, dud2, overflowed2, converted2, gcd2, fizzled2, rem2]) =
@@ -52,29 +54,30 @@ diffQuot
         (fizzled2 - fizzled1) % delta]
 
 -- Averaged difference quotients.
--- For an interval centered around a sampling point, take the closest
--- samples around the interval and make difference quotient out of them.
+-- For an interval of length 2*i, centered around a sampling point,
+-- takes the closest samples around the interval
+-- and makes difference quotient out of them.
 -- (Incidentally, the result is equal to taking a weighted average
 -- of difference quotients of all consecutive samples involved.)
--- Considering samples from outside the interval solved the difficulty
--- of intervals with only a single sample point insde and averages out
+-- Considering samples from outside the interval solves the difficulty
+-- of intervals containing only a single sample point and averages out
 -- alternations of plateaus and peaks in areas with low sample density
 -- (showing even less information that the scarce sampling already affords,
 -- but in a more readable form).
--- TODO: reimplement according to the new spec
 -- TODO: Int really too small?
-diffQuot2 :: ([Integer], [Integer]) -> [Rational]
-diffQuot2
-  ([time1, created1, dud1, overflowed1, converted1, gcd1, fizzled1, rem1],
-   [time2, created2, dud2, overflowed2, converted2, gcd2, fizzled2, rem2]) =
-    let delta = time2 - time1
-    in [toRational time2,
-        (created2 - created1) % delta,
-        (dud2 - dud1) % delta,
-        (overflowed2 - overflowed1) % delta,
-        (converted2 - converted1) % delta,
-        (gcd2 - gcd1) % delta,
-        (fizzled2 - fizzled1) % delta]
+-- TODO: The pictures shows overflows at the end of the range.
+-- Perhaps convert to milliseconds already after transform, where we still
+-- have unlimited accuracy, and not in gnuplot.
+diffQuotAverage :: Integer -> [[Integer]] -> [[Rational]]
+diffQuotAverage i l =
+  let agg lRev [] = []
+      agg lRev (current : rest) =
+        apply current lRev rest : agg (current : lRev) rest
+      apply current@(t:_) lRev l =
+        let start = head $ dropWhile (\ (t1:_) -> t - t1 < i) lRev ++ [current]
+            end   = head $ dropWhile (\ (t1:_) -> t1 - t < i) l    ++ [current]
+        in diffQuot (start, end)
+  in agg [] l
 
 -- Aggregates data within an interval of length 2*i, centered around
 -- a sampling point, according to function f. The value at the sampling point
@@ -90,11 +93,12 @@ aggregatedRem :: Integer ->
                  [(Integer, Integer)] -> [Rational]
 aggregatedRem i f l =
   let agg lRev [] = []
-      agg lRev l@((t, v) : tvs) = apply t v lRev tvs : agg ((t, v) : lRev) tvs
-      apply t v lRev l =
+      agg lRev (current : rest) =
+        apply current lRev rest : agg (current : lRev) rest
+      apply current@(t, v) lRev l =
         let lRevI = takeWhile (\ (t1, _) -> t - t1 < i) lRev
             lI    = takeWhile (\ (t1, _) -> t1 - t < i) l
-        in f v $ reverse lRevI ++ [(t, v)] ++ lI
+        in f v $ reverse lRevI ++ [current] ++ lI
   in agg [] l
 
 i0 = 5000000  -- no aggregation
@@ -124,8 +128,8 @@ transform l =
         -- one element shorter than l
         map diffQuot $ zip l (tail l)
       differenceQuotient2 =
-        -- one element shorter than l
-        map diffQuot2 $ zip l (tail l)
+        let interval = 5000000
+        in diffQuotAverage interval l
       lRem = map (\ r -> (head r, last r)) l
       aggregatedRemaining =
         zipWith4 (\ v0 v1 v2 v3 -> [v0, v1, v2, v3])
