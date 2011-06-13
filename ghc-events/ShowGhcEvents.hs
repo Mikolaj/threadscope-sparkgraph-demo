@@ -98,13 +98,13 @@ aggregatedRem i f l =
         in f v $ reverse lRevI ++ [current] ++ lI
   in agg [] l
 
-i0 = 5000000  -- no aggregation
+i0 = 10000000  -- no aggregation
 f0 v l = toRational v
-i1 = 5000000  -- max
+i1 = 10000000  -- max
 f1 v l = toRational $ maximum (map snd l)
-i2 = 5000000  -- min
+i2 = 10000000  -- min
 f2 v l = toRational $ minimum (map snd l)
-i3 = 5000000  -- mean
+i3 = 10000000  -- mean
 f3 v l = sum (map snd l) % genericLength l
 -- Warning: this mean implementation is simple, readable and preserves
 -- information about local variations, but we don't have the following property:
@@ -128,7 +128,7 @@ transform l =
         -- one element shorter than l
         map diffQuot $ zip l (tail l)
       differenceQuotient2 =
-        let interval = 5000000
+        let interval = 10000000
         in diffQuotAverage interval l
       lRem = map (\ r -> (head r, last r)) l
       aggregatedRemaining =

@@ -113,13 +113,13 @@ set xlabel  offset character 0, 0, 0 font "" textcolor lt -1 norotate
 set x2label ""
 set x2label  offset character 0, 0, 0 font "" textcolor lt -1 norotate
 set xrange [ * : * ] noreverse nowriteback  # (currently [0.00000:180.000] )
-set x2range [ * : * ] noreverse nowriteback  # (currently [10.9110:160.050] )
-set ylabel "Spark transition speed at point [spark/ms]"
+set x2range [ * : * ] noreverse nowriteback  # (currently [0.584000:176.790] )
+set ylabel "Spark pool [spark]"
 set ylabel  offset character 0, 0, 0 font "" textcolor lt -1 rotate by -270
 set y2label ""
 set y2label  offset character 0, 0, 0 font "" textcolor lt -1 rotate by -270
-set yrange [ * : * ] noreverse nowriteback  # (currently [0.00000:350.000] )
-set y2range [ * : * ] noreverse nowriteback  # (currently [0.00000:346.509] )
+set yrange [ * : * ] noreverse nowriteback  # (currently [0.00000:9000.00] )
+set y2range [ * : * ] noreverse nowriteback  # (currently [0.00000:8191.00] )
 set zlabel ""
 set zlabel  offset character 0, 0, 0 font "" textcolor lt -1 norotate
 set zrange [ * : * ] noreverse nowriteback  # (currently [-10.0000:10.0000] )
@@ -143,6 +143,5 @@ set loadpath
 set fontpath
 set fit noerrorvariables
 GNUTERM = "wxt"
-set xrange [0:4000]
-plot "output.dat" using 20:($24+$25+$26) title "GC'd" with lines, "output.dat" using 20:($24+$26) title "converted" with lines, "output.dat" using 20:($26) title "fizzled" with lines
+plot "output.dat" using ($1/1000000):16 title "remaining" with lines
 #    EOF

@@ -143,6 +143,6 @@ set loadpath
 set fontpath
 set fit noerrorvariables
 GNUTERM = "wxt"
-set xrange [0:2000]
+set xrange [0:4000]
 plot "output.dat" using 20:($21+$22+$23) title "overflowed" with lines, "output.dat" using 20:($21+$22) title "created" with lines, "output.dat" using 20:($22) title "dud" with lines
 #    EOF
