@@ -37,9 +37,6 @@ load "pool_size_max_min_mean_out.plt"
 load "creation_velocity.plt"
 load "disposal_velocity.plt"
 
-# TODO: make >= 2 more plots:
-# two zoomed out local speeds
-
 
 # to generate the plots, do, e.g.,
 
