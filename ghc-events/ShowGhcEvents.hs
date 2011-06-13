@@ -65,7 +65,6 @@ diffQuot
 -- (showing even less information that the scarce sampling already affords,
 -- but in a more readable form).
 -- TODO: Int really too small?
--- TODO: The pictures shows gar garbage at the end of the range. Fix it.
 diffQuotAverage :: Integer -> [[Integer]] -> [[Rational]]
 diffQuotAverage i l =
   let agg lRev [] = []
@@ -74,7 +73,7 @@ diffQuotAverage i l =
       apply current@(t:_) lRev l =
         let start = head $ dropWhile (\ (t1:_) -> t - t1 < i) lRev ++ [current]
             end   = head $ dropWhile (\ (t1:_) -> t1 - t < i) l    ++ [current]
-        in diffQuot (start, end)
+        in toRational t : tail (diffQuot (start, end))
   in agg [] l
 
 -- Aggregates data within an interval of length 2*i, centered around
