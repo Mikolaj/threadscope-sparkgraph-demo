@@ -62,23 +62,25 @@ diffQuot
 -- TODO: clean up the time units chaos
 -- TODO: reimplement accotding to new spec
 aggregatedRem :: Integer ->
-                 ([(Integer, Integer)] -> [Rational]) ->
-                  [(Integer, Integer)] -> [Rational]
+                 (Integer -> [(Integer, Integer)] -> Rational) ->
+                 [(Integer, Integer)] -> [Rational]
 aggregatedRem i f l =
-  let agg within end [] = []
-      agg within end l@((time, rem) : trs)
-        | time < end = agg ((time, rem) : within) end trs
-        | otherwise  = f within ++ agg [] (end + i) l
-  in agg [] 0 l
+  let agg lRev [] = []
+      agg lRev l@((t, v) : tvs) = apply t v lRev tvs : agg ((t, v) : lRev) tvs
+      apply t v lRev l =
+        let lRevI = takeWhile (\ (t1, _) -> t - t1 < i) lRev
+            lI    = takeWhile (\ (t1, _) -> t1 - t < i) l
+        in f v $ reverse lRevI ++ [(t, v)] ++ lI
+  in agg [] l
 
-i0 = 10000000  -- no aggregation
-f0 = map (toRational . snd)
-i1 = 10000000  -- max
-f1 l = replicate (length l) $ toRational $ maximum (map snd l)
-i2 = 10000000  -- min
-f2 l = replicate (length l) $ toRational $ minimum (map snd l)
-i3 = 10000000  -- mean
-f3 l = replicate (length l) $ sum (map snd l) % genericLength l
+i0 = 5000000  -- no aggregation
+f0 v l = toRational v
+i1 = 5000000  -- max
+f1 v l = toRational $ maximum (map snd l)
+i2 = 5000000  -- min
+f2 v l = toRational $ minimum (map snd l)
+i3 = 5000000  -- mean
+f3 v l = sum (map snd l) % genericLength l
 -- Warning: this mean implementation is simple, readable and preserves
 -- information about local variations, but we don't have the following property:
 -- the area under the graph is equal to the area of the original,
