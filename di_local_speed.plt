@@ -143,5 +143,5 @@ set loadpath
 set fontpath
 set fit noerrorvariables
 GNUTERM = "wxt"
-plot "output.dat" using ($9/1000000):(1000000*($13+$14+$15)) title "GC'd" with lines, "output.dat" using ($9/1000000):(1000000*($13+$15)) title "converted" with lines, "output.dat" using ($9/1000000):(1000000*$15) title "fizzled" with lines
+plot "output.dat" using 9:($13+$14+$15) title "GC'd" with lines, "output.dat" using 9:($13+$15) title "converted" with lines, "output.dat" using 9:($15) title "fizzled" with lines
 #    EOF

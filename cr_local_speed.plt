@@ -143,5 +143,5 @@ set loadpath
 set fontpath
 set fit noerrorvariables
 GNUTERM = "wxt"
-plot "output.dat" using ($9/1000000):(1000000*($10+$11+$12)) title "overflowed" with lines, "output.dat" using ($9/1000000):(1000000*($10+$11)) title "created" with lines, "output.dat" using ($9/1000000):(1000000*$11) title "dud" with lines
+plot "output.dat" using 9:($10+$11+$12) title "overflowed" with lines, "output.dat" using 9:($10+$11) title "created" with lines, "output.dat" using 9:($11) title "dud" with lines
 #    EOF

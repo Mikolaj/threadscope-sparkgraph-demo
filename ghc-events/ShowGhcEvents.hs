@@ -65,9 +65,7 @@ diffQuot
 -- (showing even less information that the scarce sampling already affords,
 -- but in a more readable form).
 -- TODO: Int really too small?
--- TODO: The pictures shows overflows at the end of the range.
--- Perhaps convert to milliseconds already after transform, where we still
--- have unlimited accuracy, and not in gnuplot.
+-- TODO: The pictures shows gar garbage at the end of the range. Fix it.
 diffQuotAverage :: Integer -> [[Integer]] -> [[Rational]]
 diffQuotAverage i l =
   let agg lRev [] = []
@@ -121,7 +119,10 @@ f3 v l = sum (map snd l) % genericLength l
 
 transform :: [[Integer]] -> [[Rational]]
 transform l =
-  let raw =
+  let rescale (time : values) =
+        -- from nano to milliseconds
+        time * (1 % 1000000) : map (* 1000000) values
+      raw =
         -- for simple math in gnuplot (TODO: the very last sample point is lost)
         map (map toRational) l
       differenceQuotient =
@@ -138,8 +139,10 @@ transform l =
         (aggregatedRem i2 f2 lRem)
         (aggregatedRem i3 f3 lRem)
   in zipWith4 (\ l1 l2 l3 l4 -> l1 ++ l2 ++ l3 ++ l4)
-       raw differenceQuotient aggregatedRemaining differenceQuotient2
-
+       raw
+       (map rescale differenceQuotient)
+       aggregatedRemaining
+       (map rescale differenceQuotient2)
 
 main = do
   [file] <- getArgs
