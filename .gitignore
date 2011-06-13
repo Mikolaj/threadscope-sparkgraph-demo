@@ -2,6 +2,6 @@ dist/
 *~
 output.dat
 parlist
-*.eventlog
+parlist2
 *.hi
 *.o

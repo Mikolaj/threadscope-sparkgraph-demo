@@ -1,8 +1,6 @@
 {-# LANGUAGE BangPatterns #-}
 
--- Plots ending in "2" illustrate the commented out variant (parListWHNF) below.
--- The code was run with: ./parlist +RTS -N2 -ls
--- on a 2-core machine, with only the first core captured in the plots.
+-- see parlist.hs
 
 import Data.List
 import Control.Parallel
@@ -13,8 +11,7 @@ fib 1 = 1
 fib n = fib (n-1) + fib (n-2)
 
 main =
-  let xs = [ fib (n `mod` 10) | n <- [0..300000] ] -- `using` parListWHNF
-                                                   `using` parBufferWHNF 1000
+  let xs = [ fib (n `mod` 10) | n <- [0..300000] ] `using` parListWHNF
    in print (sum xs)
 
 parListWHNF :: Strategy [a]

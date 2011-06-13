@@ -7,15 +7,27 @@
 # is the one from http://darcs.haskell.org/~duncan/ghc/
 
 # Instructions:
-# to see the plots, do (using the right ghc version)
+# To see the plots, compile and run tests (using the right ghc version).
+# Or you can skip the next 4 lines and use pregenerated test data.
+
+ghc -O -eventlog -rtsopts parlist.hs --make -threaded
+./parlist +RTS -N2 -ls
+ghc -O -eventlog -rtsopts parlist2.hs --make -threaded
+./parlist2 +RTS -N2 -ls
+
+# Then compile tools and prepare the data
+# (shown only for parlist.eventlog; you can do the same using parlist2.eventlog
+# and see different plots, for a test with faulty parallelisation).
 
 cd ghc-events/; cabal install; cd ..
 
-ghc -O -eventlog -rtsopts parlist.hs --make -threaded
+show-ghc-events parlist.eventlog > output.dat
 
-./parlist +RTS -N2 -ls; show-ghc-events parlist.eventlog > output.dat
+# Now run gnuplot.
 
 gnuplot
+
+# And enter the following gnuplot directives.
 
 load "pool_size.plt"
 load "pool_size_max.plt"
@@ -36,15 +48,18 @@ load "pool_size_max_min_mean_out.plt"
 # the total cumulated number of sparks created/disposed
 load "creation_velocity.plt"
 load "disposal_velocity.plt"
+load "creation_velocity_out.plt"
+load "disposal_velocity_out.plt"
 
 
-# to generate the plots, do, e.g.,
+# to generate the plots as picture files, do, e.g.,
 
 set term pngcairo size 600, 400
 
 # and repeat the loads, naming the pictures before each, as in
 
 set output "png/pool_size.png"
+
 
 # deprecated plots:
 
