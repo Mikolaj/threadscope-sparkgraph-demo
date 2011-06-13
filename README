@@ -21,11 +21,15 @@ load "pool_size.plt"
 load "pool_size_max.plt"
 load "pool_size_min.plt"
 load "pool_size_mean.plt"
+load "pool_size_max_min_original.plt"
+load "pool_size_max_min_mean.plt"
 
 load "pool_size_out.plt"
 load "pool_size_max_out.plt"
 load "pool_size_min_out.plt"
 load "pool_size_mean_out.plt"
+load "pool_size_max_min_out.plt"
+load "pool_size_max_min_mean_out.plt"
 
 # TODO: colour (<@dcoutts> eg black duds, green created and red overflows)
 # TODO: indicate somewhere than the area below the graph corresponds to
@@ -44,8 +48,6 @@ set term pngcairo size 600, 400
 # and repeat the loads, naming the pictures before each, as in
 
 set output "png/pool_size.png"
-
-# at one point I also needed "set yrange [0:1100]" for pool_size.plt
 
 # deprecated plots:
 
