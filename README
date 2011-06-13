@@ -33,9 +33,8 @@ load "pool_size_mean_out.plt"
 load "creation_velocity.plt"
 load "disposal_velocity.plt"
 
-# TODO: make >= 4 more plots:
-# two zoomed out local speeds, two or more zoomed in local speeds with
-# different time intervals for resampling
+# TODO: make >= 2 more plots:
+# two zoomed out local speeds
 
 
 # to generate the plots, do, e.g.,
