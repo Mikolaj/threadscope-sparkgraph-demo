@@ -43,13 +43,13 @@ diffQuot
   ([time1, created1, dud1, overflowed1, converted1, gcd1, fizzled1, rem1],
    [time2, created2, dud2, overflowed2, converted2, gcd2, fizzled2, rem2]) =
     let delta = time2 - time1
-    in [time2 % 1000000,
-        1000000 * (created2 - created1) % delta,
-        1000000 * (dud2 - dud1) % delta,
-        1000000 * (overflowed2 - overflowed1) % delta,
-        1000000 * (converted2 - converted1) % delta,
-        1000000 * (gcd2 - gcd1) % delta,
-        1000000 * (fizzled2 - fizzled1) % delta]
+    in [toRational time2,
+        (created2 - created1) % delta,
+        (dud2 - dud1) % delta,
+        (overflowed2 - overflowed1) % delta,
+        (converted2 - converted1) % delta,
+        (gcd2 - gcd1) % delta,
+        (fizzled2 - fizzled1) % delta]
 
 -- Averaged difference quotients.
 -- For an interval centered around a sampling point, take the closest
@@ -68,13 +68,13 @@ diffQuot2
   ([time1, created1, dud1, overflowed1, converted1, gcd1, fizzled1, rem1],
    [time2, created2, dud2, overflowed2, converted2, gcd2, fizzled2, rem2]) =
     let delta = time2 - time1
-    in [time2 % 1000000,
-        1000000 * (created2 - created1) % delta,
-        1000000 * (dud2 - dud1) % delta,
-        1000000 * (overflowed2 - overflowed1) % delta,
-        1000000 * (converted2 - converted1) % delta,
-        1000000 * (gcd2 - gcd1) % delta,
-        1000000 * (fizzled2 - fizzled1) % delta]
+    in [toRational time2,
+        (created2 - created1) % delta,
+        (dud2 - dud1) % delta,
+        (overflowed2 - overflowed1) % delta,
+        (converted2 - converted1) % delta,
+        (gcd2 - gcd1) % delta,
+        (fizzled2 - fizzled1) % delta]
 
 -- Aggregates data within an interval of length 2*i, centered around
 -- a sampling point, according to function f. The value at the sampling point
@@ -85,7 +85,6 @@ diffQuot2
 -- but avoids solid blobs at extreme zoom out. When visualized at zoom levels
 -- where intervals do not collapse to a single point, the data is smoothed
 -- (e.g. locally averaged out, if f is mean).
--- TODO: clean up the time units chaos
 aggregatedRem :: Integer ->
                  (Integer -> [(Integer, Integer)] -> Rational) ->
                  [(Integer, Integer)] -> [Rational]
