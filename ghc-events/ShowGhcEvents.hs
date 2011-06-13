@@ -36,9 +36,35 @@ parse [time, "cap", "0", "spark", "stats",
   Just [time, created, dud, overflowed, converted, gcd, fizzled, rem]
 parse _ = Nothing
 
--- Difference quotients. TODO: Int really too small?
+-- Ordinary difference quotients.
+-- Bad, because data not continuous, so no derivative, so infinities and NaNs.
 diffQuot :: ([Integer], [Integer]) -> [Rational]
 diffQuot
+  ([time1, created1, dud1, overflowed1, converted1, gcd1, fizzled1, rem1],
+   [time2, created2, dud2, overflowed2, converted2, gcd2, fizzled2, rem2]) =
+    let delta = time2 - time1
+    in [time2 % 1000000,
+        1000000 * (created2 - created1) % delta,
+        1000000 * (dud2 - dud1) % delta,
+        1000000 * (overflowed2 - overflowed1) % delta,
+        1000000 * (converted2 - converted1) % delta,
+        1000000 * (gcd2 - gcd1) % delta,
+        1000000 * (fizzled2 - fizzled1) % delta]
+
+-- Averaged difference quotients.
+-- For an interval centered around a sampling point, take the closest
+-- samples around the interval and make difference quotient out of them.
+-- (Incidentally, the result is equal to taking a weighted average
+-- of difference quotients of all consecutive samples involved.)
+-- Considering samples from outside the interval solved the difficulty
+-- of intervals with only a single sample point insde and averages out
+-- alternations of plateaus and peaks in areas with low sample density
+-- (showing even less information that the scarce sampling already affords,
+-- but in a more readable form).
+-- TODO: reimplement according to the new spec
+-- TODO: Int really too small?
+diffQuot2 :: ([Integer], [Integer]) -> [Rational]
+diffQuot2
   ([time1, created1, dud1, overflowed1, converted1, gcd1, fizzled1, rem1],
    [time2, created2, dud2, overflowed2, converted2, gcd2, fizzled2, rem2]) =
     let delta = time2 - time1
@@ -60,7 +86,6 @@ diffQuot
 -- where intervals do not collapse to a single point, the data is smoothed
 -- (e.g. locally averaged out, if f is mean).
 -- TODO: clean up the time units chaos
--- TODO: reimplement accotding to new spec
 aggregatedRem :: Integer ->
                  (Integer -> [(Integer, Integer)] -> Rational) ->
                  [(Integer, Integer)] -> [Rational]
@@ -99,6 +124,9 @@ transform l =
       differenceQuotient =
         -- one element shorter than l
         map diffQuot $ zip l (tail l)
+      differenceQuotient2 =
+        -- one element shorter than l
+        map diffQuot2 $ zip l (tail l)
       lRem = map (\ r -> (head r, last r)) l
       aggregatedRemaining =
         zipWith4 (\ v0 v1 v2 v3 -> [v0, v1, v2, v3])
@@ -106,8 +134,8 @@ transform l =
         (aggregatedRem i1 f1 lRem)
         (aggregatedRem i2 f2 lRem)
         (aggregatedRem i3 f3 lRem)
-  in zipWith3 (\ l1 l2 l3 -> l1 ++ l2 ++ l3)
-       raw differenceQuotient aggregatedRemaining
+  in zipWith4 (\ l1 l2 l3 l4 -> l1 ++ l2 ++ l3 ++ l4)
+       raw differenceQuotient aggregatedRemaining differenceQuotient2
 
 
 main = do
