@@ -40,9 +40,6 @@ load "pool_size_mean_out.plt"
 load "pool_size_max_min_out.plt"
 load "pool_size_max_min_mean_out.plt"
 
-# TODO: colour (<@dcoutts> eg black duds, green created and red overflows)
-# TODO: indicate somewhere than the area below the graph corresponds to
-# the total cumulated number of sparks created/disposed
 load "creation_velocity.plt"
 load "disposal_velocity.plt"
 load "creation_velocity_out.plt"

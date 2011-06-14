@@ -1,0 +1,37 @@
+Soon:
+
+add *_velocity.png to threadscope
+
+colour (<@dcoutts> eg black duds, green created and red overflows)
+
+indicate somewhere than the area below the graph corresponds to
+the total cumulated number of sparks created/disposed
+
+make sure the interval is reasonable for usual data
+
+use something akin to EventTree and DurationTree to store aggregations
+and raw data at the bottom
+
+
+
+Later:
+
+if needed, optimize Haskell math: memory leaks, Int instead of Integer, etc.
+
+add pool size to threadscope
+
+automatically set the interval size, depending on zoom factor,
+to represent a constant number of pixels
+
+
+
+Far future:
+
+look for some other parallel programs to test
+
+let the user set the interval size, as an advanced option
+
+scroll around the graph image via a small zoomed out window
+"The Information Mural: A Technique for Displaying and Navigating Large Information Spaces"
+
+use adaptive interval, depending on the sample density at the viewed fragment

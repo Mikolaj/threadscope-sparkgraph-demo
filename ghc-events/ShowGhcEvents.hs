@@ -64,7 +64,6 @@ diffQuot
 -- alternations of plateaus and peaks in areas with low sample density
 -- (showing even less information that the scarce sampling already affords,
 -- but in a more readable form).
--- TODO: Int really too small?
 diffQuotAverage :: Integer -> [[Integer]] -> [[Rational]]
 diffQuotAverage i l =
   let agg lRev [] = []
@@ -78,7 +77,7 @@ diffQuotAverage i l =
 
 -- Aggregates data within an interval of length 2*i, centered around
 -- a sampling point, according to function f. The value at the sampling point
--- is then be overwriiten with the aggregate produced by f. No intervals
+-- is then be overwriten with the aggregate produced by f. No intervals
 -- with no sample points inside contribute anything to the result,
 -- hence the input and output lists have the same length.
 -- This setup preserves information about the location of sampling points,
@@ -122,7 +121,7 @@ transform l =
         -- from nano to milliseconds
         time * (1 % 1000000) : map (* 1000000) values
       raw =
-        -- for simple math in gnuplot (TODO: the very last sample point is lost)
+        -- for simple math in gnuplot
         map (map toRational) l
       differenceQuotient =
         -- one element shorter than l
