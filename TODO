@@ -12,6 +12,9 @@ make sure the interval is reasonable for usual data
 use something akin to EventTree and DurationTree to store aggregations
 and raw data at the bottom
 
+25%/50%/75% percentile for pool size, in gnuplot
+http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.10.6199
+figure 15
 
 
 Later:
