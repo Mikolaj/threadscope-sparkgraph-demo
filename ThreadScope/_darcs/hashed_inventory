@@ -1,4 +1,4 @@
-pristine:0000001864-5bb9fef42af9308d3f2daa3effef71c9662489cf88325665aef76ede00ff7a40
+pristine:0000001864-e41d5e81978a98bece23144cfe3d6fc68fbb466e8c1db4dfb756f85c64490aaa
 Starting with inventory:
 0000057931-abac2ae96674d7ba725832fd35d1a3a29979b5da1f1bffa834058446f884179b
 [TAG 0.1.2
@@ -478,3 +478,28 @@ Simon Marlow <marlowsd@gmail.com>**20110526123341
  Ignore-this: 2d81e85e6cb4723bac99428ee842f4a4
 ] 
 hash: 0000000287-c6c1ba85b13ce4d73df8930841a4407322ca652d17ccd987630340ba9cfd02f0
+[datatype of tree of spark counters and it's constructor
+mikolaj.konarski@gmail.com**20110617180100
+ Ignore-this: d8dbb1c8fbeca4bc7d5fd79821e1e3b0
+] 
+hash: 0000004977-42c8f73a79c878fc9e716c8520b971b5dd68f7e1b7798d3f47eaac9bd4811f15
+[whitespace fix for the cabal file
+mikolaj.konarski@gmail.com**20110617180515
+ Ignore-this: 5ad0262dc044ac4912aac4f9ea085aa
+] 
+hash: 0000000649-ad4945bedcbfa75e446a7770dc4b248990f513fddbce383c687abf3651bab59f
+[add the spark trees to the cabal config
+mikolaj.konarski@gmail.com**20110617201653
+ Ignore-this: e591b4c69edac9983eafd4fdd6b3b64
+] 
+hash: 0000000199-428bbe89b924a28684039ed3e395827352b3b6f5e93c11930a9e99eedd83bb63
+[force compilation of spark trees
+mikolaj.konarski@gmail.com**20110617201815
+ Ignore-this: a8be3692f94e15fa9bff6234e7df3c6e
+] 
+hash: 0000000201-d62b1961f8b8aa3bea273504f85cd3b20eb5db453fa87e858ee11352fce63e90
+[add filtering out events urelated to spark trees
+mikolaj.konarski@gmail.com**20110617214716
+ Ignore-this: 5216df44f7516acd03c67fc7b3780d4a
+] 
+hash: 0000001222-b40687ce46b63d131862446d9f2a62d6838af544ab61e67472880ff4751d5341

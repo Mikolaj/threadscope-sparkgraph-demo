@@ -19,6 +19,9 @@ import GHC.RTS.Events hiding (Event)
 
 import Text.Printf
 
+
+import Events.SparkTree
+foo = mkSparkTree
 -------------------------------------------------------------------------------
 
 -- We map the events onto a binary search tree, so that we can easily
