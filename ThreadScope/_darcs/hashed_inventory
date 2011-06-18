@@ -1,4 +1,4 @@
-pristine:0000001864-e41d5e81978a98bece23144cfe3d6fc68fbb466e8c1db4dfb756f85c64490aaa
+pristine:0000001864-fb50828a904b1ebf339d2d5e2e9edc2a39617c5f48cf116410dec78078d0c667
 Starting with inventory:
 0000057931-abac2ae96674d7ba725832fd35d1a3a29979b5da1f1bffa834058446f884179b
 [TAG 0.1.2
@@ -503,3 +503,18 @@ mikolaj.konarski@gmail.com**20110617214716
  Ignore-this: 5216df44f7516acd03c67fc7b3780d4a
 ] 
 hash: 0000001222-b40687ce46b63d131862446d9f2a62d6838af544ab61e67472880ff4751d5341
+[add the query to the spark tree, giving deltas of spark transtions
+mikolaj.konarski@gmail.com**20110618092110
+ Ignore-this: 1ec772da5d5600d35292b094ccd7c190
+] 
+hash: 0000005414-cd795d1675114490fa188d7512ef6f533eefe5fe92143b46f92e3dedf40f1d9d
+[make available a few more basic spark tree operations
+mikolaj.konarski@gmail.com**20110618101909
+ Ignore-this: fa57254c55dd2bcabbe24523649d9bf8
+] 
+hash: 0000000592-136476340c88d177b875ad876118e4a14e088948286f67b91c4930b8779c2214
+[plug spark trees in; stop at rendering
+mikolaj.konarski@gmail.com**20110618102016
+ Ignore-this: 8b6d0b2fa05fff83fee5289fd64204bc
+] 
+hash: 0000002047-1980ba5a66ea846fa63473fc85e4af3a390a21f9917dd9393e708979c50bd786
