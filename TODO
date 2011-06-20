@@ -2,30 +2,49 @@ Soon:
 
 add *_velocity.png to threadscope
 
-colour (<@dcoutts> eg black duds, green created and red overflows)
+colour (<@dcoutts> eg dull grey/brown duds, green created and red overflows)
 
 indicate somewhere than the area below the graph corresponds to
 the total cumulated number of sparks created/disposed
 
 make sure the interval is reasonable for usual data
 
-use something akin to EventTree and DurationTree to store aggregations
-and raw data at the bottom
-
 25%/50%/75% percentile for pool size, in gnuplot
 http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.10.6199
 figure 15
 
+we should be able to turn SparksHEC on/off in the traces pane
 
-Later:
+consider making the graphs more accurate by drilling down the tree
+to the base events at each slice borders:
+10:14 <@mikolaj> they don't go down to the base events at each slice boundary
+10:15 <@mikolaj> but only at the two viewport borders (hence the extra slices at the ends dcoutts noticed)
 
-if needed, optimize Haskell math: memory leaks, Int instead of Integer, etc.
-
-add pool size to threadscope
+or increse the accuracy by dividing increments not by the slice
+length (implicitly), but the length of the sum of tree node spans
+that cover the slice, similarly as in gnuplot graphs
 
 automatically set the interval size, depending on zoom factor,
 to represent a constant number of pixels
 
+
+Later:
+
+add pool size to threadscope
+
+animate zoom level transitions:
+13:00 <@dcoutts> mikolaj: over the weekend I was idly thinking about ways to make the zoom in/out less confusing for users (e.g. the sudden appearance of spikyness once
+ you pass certain thresholds)
+13:01 <@dcoutts> mikolaj: this isn't something to do now of course, but I though animating the transitions would make it clearer
+13:02 <@dcoutts> generate the bitmap of the higher resolution new view, and animate it expanding to cover the new view
+13:02 <@dcoutts> it'd be quick since it's just bitmap scaling
+13:02 <@dcoutts> so the user can see the region in the old view that is expanding out to become the new view
+
+merge adjacent 0 samples:
+14:07 <@dcoutts> if we have equal adjacent samples we just take the second/last
+14:07 <@dcoutts> can be done when it's still a list, before making the tree
+14:07 <@dcoutts> simple linear pass
+14:07 <@dcoutts> and lazy too
 
 
 Far future:
