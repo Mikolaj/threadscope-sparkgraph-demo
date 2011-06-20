@@ -1,4 +1,4 @@
-pristine:0000001864-fb50828a904b1ebf339d2d5e2e9edc2a39617c5f48cf116410dec78078d0c667
+pristine:0000001864-d4cff29ea47bc7a5cb1049040a9cb993fdd7b7efe4c5e77dd9edd7248b442516
 Starting with inventory:
 0000057931-abac2ae96674d7ba725832fd35d1a3a29979b5da1f1bffa834058446f884179b
 [TAG 0.1.2
@@ -493,11 +493,6 @@ mikolaj.konarski@gmail.com**20110617201653
  Ignore-this: e591b4c69edac9983eafd4fdd6b3b64
 ] 
 hash: 0000000199-428bbe89b924a28684039ed3e395827352b3b6f5e93c11930a9e99eedd83bb63
-[force compilation of spark trees
-mikolaj.konarski@gmail.com**20110617201815
- Ignore-this: a8be3692f94e15fa9bff6234e7df3c6e
-] 
-hash: 0000000201-d62b1961f8b8aa3bea273504f85cd3b20eb5db453fa87e858ee11352fce63e90
 [add filtering out events urelated to spark trees
 mikolaj.konarski@gmail.com**20110617214716
  Ignore-this: 5216df44f7516acd03c67fc7b3780d4a
@@ -518,3 +513,28 @@ mikolaj.konarski@gmail.com**20110618102016
  Ignore-this: 8b6d0b2fa05fff83fee5289fd64204bc
 ] 
 hash: 0000002047-1980ba5a66ea846fa63473fc85e4af3a390a21f9917dd9393e708979c50bd786
+[refactor and generalize SparkCounters operations
+mikolaj.konarski@gmail.com**20110620105202
+ Ignore-this: 447419d0a52c898a64ffd3ecda3f4200
+] 
+hash: 0000003431-7dd48234d68eed8a54170283b8dee8a4c2a7fef2e63ae67322b3360d911b6e15
+[more precisely approximate values for slices crossing borders of tree nodes
+mikolaj.konarski@gmail.com**20110620105407
+ Ignore-this: 27af79635be3377960ff3e06a89a5177
+] 
+hash: 0000000419-06b9dd69336347e4a5bf9a84a6bae2f9bf3f1e34568cc906b25bdfc37b82a5a3
+[plug in SparkTrees for rendering, plenty decisions to make now
+mikolaj.konarski@gmail.com**20110620105549
+ Ignore-this: 3c378887f7eaa0bdebb3db16cd7b0b2
+] 
+hash: 0000002305-7be42bb89e14bd763d1a14654ff77c745a2c900ca92bfa2a173ef91a8c3f04ff
+[refactor: move SparkCounters to a separate file
+mikolaj.konarski@gmail.com**20110620112623
+ Ignore-this: 1703690a3be1e363bfb1fd51d001136a
+] 
+hash: 0000007821-55aa2c00a4050b19deb04e64a1efad7d1135ce1672e6504c22d86724f95a815c
+[refactor: reorder functions chronologically
+mikolaj.konarski@gmail.com**20110620113236
+ Ignore-this: 12bc0b12e6a94948a997650fc31546fa
+] 
+hash: 0000002104-b2cb451cfb4dd737518de50708dfaf89d8d069bdbdaa228944fa218ee84fd4ff
