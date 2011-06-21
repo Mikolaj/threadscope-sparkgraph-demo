@@ -9,6 +9,8 @@ import GHC.RTS.Events
 
 data Trace
   = TraceHEC      Int
+  | SparkCreationHEC Int
+  | SparkConversionHEC Int
   | TraceThread   ThreadId
   | TraceGroup    String
   | TraceActivity
@@ -26,4 +28,3 @@ data ViewParameters = ViewParameters {
     bwMode, labelsMode :: Bool
   }
   deriving Eq
-

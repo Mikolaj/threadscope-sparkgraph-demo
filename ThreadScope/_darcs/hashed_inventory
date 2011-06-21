@@ -1,4 +1,4 @@
-pristine:0000001864-d4cff29ea47bc7a5cb1049040a9cb993fdd7b7efe4c5e77dd9edd7248b442516
+pristine:0000001864-2fb233a00bdbffe41af463e44da857f7c9d411f928c6e98ab199758098d2b2e9
 Starting with inventory:
 0000057931-abac2ae96674d7ba725832fd35d1a3a29979b5da1f1bffa834058446f884179b
 [TAG 0.1.2
@@ -538,3 +538,28 @@ mikolaj.konarski@gmail.com**20110620113236
  Ignore-this: 12bc0b12e6a94948a997650fc31546fa
 ] 
 hash: 0000002104-b2cb451cfb4dd737518de50708dfaf89d8d069bdbdaa228944fa218ee84fd4ff
+[move spark graphs out of trace graphs, into a separate block
+mikolaj.konarski@gmail.com**20110621002223
+ Ignore-this: 57fddfacd2c6e8da50f12306c8520f6
+] 
+hash: 0000004209-7210fb6880d9331328eaa2545a3c29c19e8959bbec4c29086d74fff22889c965
+[add 3 stacked graphs of spark conversion; TODO: fill
+mikolaj.konarski@gmail.com**20110621113354
+ Ignore-this: e90945fa72b5bf1ba177cd8e7a170231
+] 
+hash: 0000002475-583d9e4d589e548d919b5f7704d5fa880fad9ece2e0cc5a8b9af9751fc3ac618
+[add spark creation graph, separately
+mikolaj.konarski@gmail.com**20110621122528
+ Ignore-this: ed8c760d236e1dea301a712170c561d3
+] 
+hash: 0000004798-96765fb922bb80b1d3fd67621c47db2efc911e98d06f0752120ecfea9ac91124
+[add filling area under graphs with solid colours; TODO: clean zoom
+mikolaj.konarski@gmail.com**20110621154630
+ Ignore-this: 3b33e2b9816b232bda9a445f2a192a87
+] 
+hash: 0000003413-222aef5ab0e942bcc287f7c2a2d742dea4c011091460b2f07c4a8bf9fe52c822
+[fix zoom and arithmetics
+mikolaj.konarski@gmail.com**20110621164821
+ Ignore-this: 91ffa532828afd4eb72fd82f4878eb3e
+] 
+hash: 0000001309-e3d17114ac9c7420fcb45768e165a39d85e95eb4851af4b8a9541a45c2bd950d

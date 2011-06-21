@@ -1,5 +1,7 @@
 module GUI.Timeline.HEC (
-    renderHEC
+    renderHEC,
+    renderSparkCreation,
+    renderSparkConversion,
   ) where
 
 import GUI.Timeline.Render.Constants
@@ -21,14 +23,13 @@ import GHC.RTS.Events hiding (Event, GCWork, GCIdle)
 
 import Control.Monad
 
-import Text.Printf
+-- import Text.Printf
 
 renderHEC :: Int -> ViewParameters
           -> Timestamp -> Timestamp -> (DurationTree, EventTree, SparkTree)
           -> Render ()
-renderHEC cap params@ViewParameters{..} start end (dtree, etree, stree) = do
+renderHEC cap params@ViewParameters{..} start end (dtree, etree, _stree) = do
   renderDurations cap params start end dtree
-  renderSparks params start end stree
   when (scaleValue < detailThreshold) $
      case etree of
        EventTree ltime etime tree ->
@@ -67,55 +68,98 @@ renderDurations !c params@ViewParameters{..} !startPos !endPos
 
 -------------------------------------------------------------------------------
 
-renderSparks :: ViewParameters -> Timestamp -> Timestamp -> SparkTree
-                -> Render ()
-renderSparks ViewParameters{..} !start0 !end0 t = do
-  let slice = round (fromIntegral activity_detail * scaleValue)
+renderSparkCreation :: ViewParameters -> Timestamp -> Timestamp -> SparkTree
+                       -> Render ()
+renderSparkCreation ViewParameters{..} !start0 !end0 t = do
+  let slice = round (fromIntegral spark_detail * scaleValue)
       -- round the start time down, and the end time up, to a slice boundary
       start = (start0 `div` slice) * slice
       end   = ((end0 + slice) `div` slice) * slice
       prof  = sparkProfile slice start end t
-  drawSparks start end slice prof
+  drawSparkCreation start end slice prof
 
-activity_detail :: Int
-activity_detail = 4 -- in pixels
+renderSparkConversion :: ViewParameters -> Timestamp -> Timestamp -> SparkTree
+                         -> Render ()
+renderSparkConversion ViewParameters{..} !start0 !end0 t = do
+  let slice = round (fromIntegral spark_detail * scaleValue)
+      -- round the start time down, and the end time up, to a slice boundary
+      start = (start0 `div` slice) * slice
+      end   = ((end0 + slice) `div` slice) * slice
+      prof  = sparkProfile slice start end t
+  drawSparkConversion start end slice prof
 
-drawSparks :: Timestamp -> Timestamp -> Timestamp -> [SparkCounters.SparkCounters]
-              -> Render ()
-drawSparks start end slice ts = do
+spark_detail :: Int
+spark_detail = 4 -- in pixels
+
+spark_max, spark_per_pixel :: Double
+-- Maximum value of s3 in current data. TODO: calculate
+spark_max = 35000.0
+-- Sparks per pixel for current data.
+spark_per_pixel = spark_max / fromIntegral hecSparksHeight
+
+drawSparkCreation :: Timestamp -> Timestamp -> Timestamp
+                     -> [SparkCounters.SparkCounters]
+                     -> Render ()
+drawSparkCreation start end slice ts = do
+  let f0 c = 0
+      f1 c = f0 c + fromIntegral (SparkCounters.sparksDud c)
+      f2 c = f1 c + fromIntegral (SparkCounters.sparksCreated c)
+      f3 c = f2 c + fromIntegral (SparkCounters.sparksOverflowed c)
+  addSparks (0.5, 0.5, 0.5) f0 f1 start end slice ts
+  addSparks (0, 1, 0) f1 f2 start end slice ts
+  addSparks (1, 0, 0) f2 f3 start end slice ts
+
+drawSparkConversion :: Timestamp -> Timestamp -> Timestamp
+                       -> [SparkCounters.SparkCounters]
+                       -> Render ()
+drawSparkConversion start end slice ts = do
+  let f0 c = 0
+      f1 c = f0 c + fromIntegral (SparkCounters.sparksFizzled c)
+      f2 c = f1 c + fromIntegral (SparkCounters.sparksConverted c)
+      f3 c = f2 c + fromIntegral (SparkCounters.sparksGCd c)
+  addSparks (0.5, 0.5, 0.5) f0 f1 start end slice ts
+  addSparks (0, 1, 0) f1 f2 start end slice ts
+  addSparks (1, 0, 0) f2 f3 start end slice ts
+
+off :: (SparkCounters.SparkCounters -> Double)
+       -> SparkCounters.SparkCounters
+       -> Double
+off f t = fromIntegral hecSparksHeight - f t / spark_per_pixel
+
+addSparks :: (Double, Double, Double)
+             -> (SparkCounters.SparkCounters -> Double)
+             -> (SparkCounters.SparkCounters -> Double)
+             -> Timestamp -> Timestamp -> Timestamp
+             -> [SparkCounters.SparkCounters]
+             -> Render ()
+addSparks (cR, cG, cB) f0 f1 start end slice ts = do
   case ts of
    [] -> return ()
-   t:ts -> do
-     liftIO $ printf "ts: %s\n" (show (map SparkCounters.sparksConverted (t:ts)))
-     liftIO $ printf "off: %s\n" (show (map off (t:ts) :: [Double]))
+   ts -> do
+     -- liftIO $ printf "ts: %s\n" (show (map f1 (ts)))
+     -- liftIO $ printf "off: %s\n" (show (map (off f1) (ts) :: [Double]))
      let dstart = fromIntegral start
          dend   = fromIntegral end
          dslice = fromIntegral slice
-         dheight = fromIntegral activityGraphHeight
+         dheight = fromIntegral hecSparksHeight
+         points = [dstart-dslice/2, dstart+dslice/2 ..]
+         t0 = zip points (map (off f0) ts)
+         t1 = zip points (map (off f1) ts)
 
      newPath
-     moveTo (dstart-dslice/2) (off t)
-     zipWithM_ lineTo (tail [dstart-dslice/2, dstart+dslice/2 ..]) (map off ts)
-     setSourceRGBAhex black 1.0
+     moveTo (dstart-dslice/2) (snd $ head t1)
+     mapM_ (uncurry lineTo) t1
+     mapM_ (uncurry lineTo) (reverse t0)
+     setSourceRGB cR cG cB
+     fillPreserve
+{-
+     setSourceRGB 0 0 0
      save
      identityMatrix
      setLineWidth 1
      strokePreserve
      restore
-{-
-     lineTo dend   dheight
-     lineTo dstart dheight
-     setSourceRGB 0 1 0
-     fill
 -}
-
-  where
-    off :: SparkCounters.SparkCounters -> Double
-    off t = -- fromIntegral activityGraphHeight -
-            fromIntegral (SparkCounters.sparksConverted t)
-            * fromIntegral activityGraphHeight
-            / 15000.0  --TODO
-
 -------------------------------------------------------------------------------
 
 renderEvents :: Int -> ViewParameters

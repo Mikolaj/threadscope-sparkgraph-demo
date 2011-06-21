@@ -58,9 +58,11 @@ traceViewNew builder actions = do
     return traceview
 
   where
-    renderTrace (TraceGroup str) = str
     renderTrace (TraceHEC    n)  = show n
+    renderTrace (SparkCreationHEC n) = show n
+    renderTrace (SparkConversionHEC n) = show n
     renderTrace (TraceThread n)  = show n
+    renderTrace (TraceGroup str) = str
     renderTrace (TraceActivity)  = "Activity Profile"
 
 -- Find the HEC traces in the treeStore and replace them
@@ -70,20 +72,39 @@ traceViewSetHECs TraceView{tracesStore} hecs = do
     go 0
     treeStoreInsert tracesStore [] 0 (TraceActivity, True)
   where
-    newt = Node { rootLabel = (TraceGroup "HECs", True),
-                  subForest = [ Node { rootLabel = (TraceHEC n, True),
+    newt = Node { rootLabel = (TraceGroup "HEC Traces", True),
+                  subForest = [ Node { rootLabel = (TraceHEC k, True),
                                        subForest = [] }
-                              | n <- [ 0 .. hecCount hecs - 1 ] ] }
-
+                              | k <- [ 0 .. hecCount hecs - 1 ] ] }
+    nCre = Node { rootLabel = (TraceGroup "Spark Creation", True),
+                  subForest = [ Node { rootLabel = (SparkCreationHEC k, True),
+                                       subForest = [] }
+                              | k <- [ 0 .. hecCount hecs - 1 ] ] }
+    nCon = Node { rootLabel = (TraceGroup "Spark Conversion", True),
+                  subForest = [ Node { rootLabel = (SparkConversionHEC k, True),
+                                       subForest = [] }
+                              | k <- [ 0 .. hecCount hecs - 1 ] ] }
     go n = do
       m <- treeStoreLookup tracesStore [n]
       case m of
-        Nothing -> treeStoreInsertTree tracesStore [] 0 newt
+        Nothing -> do
+          treeStoreInsertTree tracesStore [] 0 nCon
+          treeStoreInsertTree tracesStore [] 0 nCre
+          treeStoreInsertTree tracesStore [] 0 newt
         Just t  ->
           case t of
-             Node { rootLabel = (TraceGroup "HECs", _) } -> do
+             Node { rootLabel = (TraceGroup "HEC Traces", _) } -> do
                treeStoreRemove tracesStore [n]
                treeStoreInsertTree tracesStore [] n newt
+               go (n+1)
+             Node { rootLabel = (TraceGroup "Spark Creation", _) } -> do
+               treeStoreRemove tracesStore [n]
+               treeStoreInsertTree tracesStore [] n nCre
+               go (n+1)
+             Node { rootLabel = (TraceGroup "Spark Conversion", _) } -> do
+               treeStoreRemove tracesStore [n]
+               treeStoreInsertTree tracesStore [] n nCon
+               go (n+1)
              Node { rootLabel = (TraceActivity, _) } -> do
                treeStoreRemove tracesStore [n]
                go (n+1)

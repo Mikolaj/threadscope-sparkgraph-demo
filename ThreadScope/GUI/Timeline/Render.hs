@@ -174,6 +174,12 @@ renderTraces params@ViewParameters{..} hecs (Rectangle rx _ry rw _rh)
             case trace of
                TraceHEC c ->
                    renderHEC c params startPos endPos (hecTrees hecs !! c)
+               SparkCreationHEC c ->
+                 let (_, _, stree) = hecTrees hecs !! c
+                 in renderSparkCreation params startPos endPos stree
+               SparkConversionHEC c ->
+                 let (_, _, stree) = hecTrees hecs !! c
+                 in renderSparkConversion params startPos endPos stree
                TraceActivity ->
                    renderActivity params hecs startPos endPos
                _   ->
@@ -268,16 +274,20 @@ traceYPositions showLabels traces
   where
       extra = if showLabels then hecLabelExtra else 0
 
-      traceHeight (TraceHEC _) = hecTraceHeight
+      traceHeight (TraceHEC _)  = hecTraceHeight
+      traceHeight (SparkCreationHEC _) = hecSparksHeight
+      traceHeight (SparkConversionHEC _) = hecSparksHeight
       traceHeight TraceActivity = activityGraphHeight
-      traceHeight _            = 0
+      traceHeight _             = 0
 
 --------------------------------------------------------------------------------
 
 showTrace :: Trace -> String
 showTrace (TraceHEC n)  = "HEC " ++ show n
+showTrace (SparkCreationHEC n) = "HEC " ++ show n
+showTrace (SparkConversionHEC n) = "HEC " ++ show n
 showTrace TraceActivity = "Activity"
-showTrace _            = "?"
+showTrace _             = "?"
 
 --------------------------------------------------------------------------------
 
