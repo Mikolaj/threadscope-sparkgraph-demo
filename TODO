@@ -1,59 +1,115 @@
 Soon:
 
-add *_velocity.png to threadscope
-
-colour (<@dcoutts> eg dull grey/brown duds, green created and red overflows)
-
-indicate somewhere than the area below the graph corresponds to
-the total cumulated number of sparks created/disposed
-
-make sure the interval is reasonable for usual data
-
 25%/50%/75% percentile for pool size, in gnuplot
 http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.10.6199
 figure 15
 
-we should be able to turn SparksHEC on/off in the traces pane
-
-consider making the graphs more accurate by drilling down the tree
-to the base events at each slice borders:
-10:14 <@mikolaj> they don't go down to the base events at each slice boundary
-10:15 <@mikolaj> but only at the two viewport borders (hence the extra slices at the ends dcoutts noticed)
-
-or increse the accuracy by dividing increments not by the slice
-length (implicitly), but the length of the sum of tree node spans
-that cover the slice, similarly as in gnuplot graphs
-
-automatically set the interval size, depending on zoom factor,
+automatically set the interval size, depending on zoom factor and data (max),
 to represent a constant number of pixels
+
+we should use the same width black lines for the outline as the activity plot
+
+a black line for the outline, not the internal lines, draw it 1 point higher
+
+fix data mangling bugs: spurious peaks, splices shifted vs. events
+
+[GUI] put all the HEC0 bits together, both in the trace and in the timeline view
+ie in the timeline, top -> bottom: activity HEC0, sparks HEC0,
+ activity HEC1, sparks HEC1, ...
+
+[GUI] draw a vertical scale: sparks/millisecond or something;
+a long label might be "spark creation/conversion rate, unit spark/ms"
+or "fizzled sparks/millisecond", etc.
+
+[GUI] in the key, label the coloured areas, according to what they represent
+the title of the plot is "spark creation rate" and the key will have things
+for each colour; separate sections of the Key for
+the activity vs sparks vs next-thing; make sure the user understands
+that the _areas_ are proportional to the total number and graphs to rates
+
+[GUI] either fix tickboxes for HEC sets or make it two dimensional: one column
+of tickboxes for activity, one column for spark creation, spark conversion
 
 
 Later:
 
 add pool size to threadscope
 
-animate zoom level transitions:
-13:00 <@dcoutts> mikolaj: over the weekend I was idly thinking about ways to make the zoom in/out less confusing for users (e.g. the sudden appearance of spikyness once
- you pass certain thresholds)
-13:01 <@dcoutts> mikolaj: this isn't something to do now of course, but I though animating the transitions would make it clearer
-13:02 <@dcoutts> generate the bitmap of the higher resolution new view, and animate it expanding to cover the new view
-13:02 <@dcoutts> it'd be quick since it's just bitmap scaling
-13:02 <@dcoutts> so the user can see the region in the old view that is expanding out to become the new view
+resample (morally) uniformly, before doing the percentiles
 
 merge adjacent 0 samples:
-14:07 <@dcoutts> if we have equal adjacent samples we just take the second/last
-14:07 <@dcoutts> can be done when it's still a list, before making the tree
-14:07 <@dcoutts> simple linear pass
-14:07 <@dcoutts> and lazy too
+if we have equal adjacent samples we just take the second/last
+can be done when it's still a list, before making the tree
+simple linear pass
+and lazy too
+
+use the extra info about when the spark pool gets full and empty;
+we know when the spark pool becomes empty because we can observe
+that the threads evaluating sparks terminate; similarly, we know overflow
+only occurs when the pool is full
+
+consider making the graphs more accurate by drilling down the tree
+to the base events at each slice borders:
+they don't go down to the base events at each slice boundary
+but only at the two viewport borders (hence the extra slices
+at the ends dcoutts noticed)
+
+or increase the accuracy by dividing increments not by the slice
+length (implicitly), but the length of the sum of tree node spans
+that cover the slice, similarly as in gnuplot graphs
 
 
 Far future:
 
+[GUI] animate zoom level transitions:
+ways to make the zoom in/out less confusing for users
+(e.g. the sudden appearance of spikyness once thresholds)
+animating the transitions would make it clearer
+generate the bitmap of the higher resolution new view,
+and animate it expanding to cover the new view
+it'd be quick since it's just bitmap scaling
+so the user can see the region in the old view
+that is expanding out to become the new view
+
+[GUI] let the user set the interval size, as an advanced option, _separately_
+for each graph stack, each HEC, each visible region at the current zoom level,
+each selected region (if they are implemented)
+
+[GUI] a button for vertical zoom (clip graphs if they don't fit at that zoom)
+and/or select regions of time in the view
+and zoom only that region of display
+
+[GUI] select a region and display it in a separate tab
+(e.g. next to the events tab) and/or show in the tab for that selected time
+period how many sparks of each kind in that time: summary statistics
+for points in time, or periods of time
+
+[GUI] scroll around the graph image via a small zoomed out window
+"The Information Mural: A Technique for Displaying
+and Navigating Large Information Spaces"
+
+[GUI] label coloured areas with a mouseover, according to what they represent
+
 look for some other parallel programs to test
 
-let the user set the interval size, as an advanced option
-
-scroll around the graph image via a small zoomed out window
-"The Information Mural: A Technique for Displaying and Navigating Large Information Spaces"
-
 use adaptive interval, depending on the sample density at the viewed fragment
+
+perhaps, depending on sample density, alternate between raw data,
+min/max, percentiles; so the raw data line slowly explodes into a band,
+a big smudge, like a string of beads, that gets even more detailed
+and perhaps wider, when data density/uniformity allows it;
+in other words: a thin line means we only guess that's where the data might be
+a thicker one, with mix/max means we have some data,
+but too irregular/scarce to say more, and full thickness line,
+with percentiles means we have enough data or evenly distributed enough
+to say all
+
+perhaps we should change the spark event sampling to emit events
+every N sparks rather than at GC; but only if experiments (do more accurate
+sampling and compare the general look of the graphs)
+show that linear extrapolation of the GC data is not correct
+(large spark transitions happen in the long periods between GC
+and we don't know when exactly) (the 4K pool size guarantees that at least
+with large visible absolute spark transition, the invisible transitions
+can't be huge in proportion to the visible ones, so then linear extrapolaton
+is correct))
