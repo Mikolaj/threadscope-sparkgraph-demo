@@ -68,6 +68,8 @@ renderDurations !c params@ViewParameters{..} !startPos !endPos
 
 -------------------------------------------------------------------------------
 
+-- TODO: refactor all of the above
+
 renderSparkCreation :: ViewParameters -> Timestamp -> Timestamp -> SparkTree
                        -> Render ()
 renderSparkCreation ViewParameters{..} !start0 !end0 t = do
@@ -91,12 +93,6 @@ renderSparkConversion ViewParameters{..} !start0 !end0 t = do
 spark_detail :: Int
 spark_detail = 4 -- in pixels
 
-spark_max, spark_per_pixel :: Double
--- Maximum value of s3 in current data. TODO: calculate
-spark_max = 35000.0
--- Sparks per pixel for current data.
-spark_per_pixel = spark_max / fromIntegral hecSparksHeight
-
 drawSparkCreation :: Timestamp -> Timestamp -> Timestamp
                      -> [SparkCounters.SparkCounters]
                      -> Render ()
@@ -105,9 +101,16 @@ drawSparkCreation start end slice ts = do
       f1 c = f0 c + fromIntegral (SparkCounters.sparksDud c)
       f2 c = f1 c + fromIntegral (SparkCounters.sparksCreated c)
       f3 c = f2 c + fromIntegral (SparkCounters.sparksOverflowed c)
-  addSparks (0.5, 0.5, 0.5) f0 f1 start end slice ts
-  addSparks (0, 1, 0) f1 f2 start end slice ts
-  addSparks (1, 0, 0) f2 f3 start end slice ts
+      spark_max, spark_per_detail, spark_per_pixel :: Double
+      spark_max = maximum (1 : map f3 ts)
+      -- Sparks per pixel/minimal detail size, for current data.
+      spark_per_detail = spark_max / fromIntegral hecSparksHeight
+      spark_per_pixel = spark_per_detail / fromIntegral spark_detail
+      f4 c = f3 c + spark_per_pixel  --- 1 pixel above f3
+  outlineSparks spark_per_detail f4 start end slice ts
+  addSparks (0.5, 0.5, 0.5) spark_per_detail f0 f1 start end slice ts
+  addSparks (0, 1, 0) spark_per_detail f1 f2 start end slice ts
+  addSparks (1, 0, 0) spark_per_detail f2 f3 start end slice ts
 
 drawSparkConversion :: Timestamp -> Timestamp -> Timestamp
                        -> [SparkCounters.SparkCounters]
@@ -117,49 +120,74 @@ drawSparkConversion start end slice ts = do
       f1 c = f0 c + fromIntegral (SparkCounters.sparksFizzled c)
       f2 c = f1 c + fromIntegral (SparkCounters.sparksConverted c)
       f3 c = f2 c + fromIntegral (SparkCounters.sparksGCd c)
-  addSparks (0.5, 0.5, 0.5) f0 f1 start end slice ts
-  addSparks (0, 1, 0) f1 f2 start end slice ts
-  addSparks (1, 0, 0) f2 f3 start end slice ts
+      spark_max, spark_per_detail, spark_per_pixel :: Double
+      spark_max = maximum (1 : map f3 ts)
+      -- Sparks per pixel/minimal detail size, for current data.
+      spark_per_detail = spark_max / fromIntegral hecSparksHeight
+      spark_per_pixel = spark_per_detail / fromIntegral spark_detail
+      f4 c = f3 c + spark_per_pixel  --- 1 pixel above f3
+  outlineSparks spark_per_detail f4 start end slice ts
+  addSparks (0.5, 0.5, 0.5) spark_per_detail f0 f1 start end slice ts
+  addSparks (0, 1, 0) spark_per_detail f1 f2 start end slice ts
+  addSparks (1, 0, 0) spark_per_detail f2 f3 start end slice ts
 
-off :: (SparkCounters.SparkCounters -> Double)
-       -> SparkCounters.SparkCounters
-       -> Double
-off f t = fromIntegral hecSparksHeight - f t / spark_per_pixel
+outlineSparks :: Double
+                 -> (SparkCounters.SparkCounters -> Double)
+                 -> Timestamp -> Timestamp -> Timestamp
+                 -> [SparkCounters.SparkCounters]
+                 -> Render ()
+outlineSparks spark_per_detail f start end slice ts = do
+  case ts of
+    [] -> return ()
+    ts -> do
+      let dstart = fromIntegral start
+          dend   = fromIntegral end
+          dslice = fromIntegral slice
+          dheight = fromIntegral hecSparksHeight
+          points = [dstart-dslice/2, dstart+dslice/2 ..]
+          t = zip points (map (off spark_per_detail f) ts)
+      newPath
+      moveTo (dstart-dslice/2) (snd $ head t)
+      mapM_ (uncurry lineTo) t
+      setSourceRGBAhex black 1.0
+      save
+      identityMatrix
+      setLineWidth 1
+      stroke
+      restore
 
 addSparks :: (Double, Double, Double)
+             -> Double
              -> (SparkCounters.SparkCounters -> Double)
              -> (SparkCounters.SparkCounters -> Double)
              -> Timestamp -> Timestamp -> Timestamp
              -> [SparkCounters.SparkCounters]
              -> Render ()
-addSparks (cR, cG, cB) f0 f1 start end slice ts = do
+addSparks (cR, cG, cB) spark_per_detail f0 f1 start end slice ts = do
   case ts of
-   [] -> return ()
-   ts -> do
-     -- liftIO $ printf "ts: %s\n" (show (map f1 (ts)))
-     -- liftIO $ printf "off: %s\n" (show (map (off f1) (ts) :: [Double]))
-     let dstart = fromIntegral start
-         dend   = fromIntegral end
-         dslice = fromIntegral slice
-         dheight = fromIntegral hecSparksHeight
-         points = [dstart-dslice/2, dstart+dslice/2 ..]
-         t0 = zip points (map (off f0) ts)
-         t1 = zip points (map (off f1) ts)
+    [] -> return ()
+    ts -> do
+      -- liftIO $ printf "ts: %s\n" (show (map f1 (ts)))
+      -- liftIO $ printf "off: %s\n" (show (map (off spark_per_detail f1) (ts) :: [Double]))
+      let dstart = fromIntegral start
+          dend   = fromIntegral end
+          dslice = fromIntegral slice
+          dheight = fromIntegral hecSparksHeight
+          points = [dstart-dslice/2, dstart+dslice/2 ..]
+          t0 = zip points (map (off spark_per_detail f0) ts)
+          t1 = zip points (map (off spark_per_detail f1) ts)
+      newPath
+      moveTo (dstart-dslice/2) (snd $ head t1)
+      mapM_ (uncurry lineTo) t1
+      mapM_ (uncurry lineTo) (reverse t0)
+      setSourceRGB cR cG cB
+      fill
 
-     newPath
-     moveTo (dstart-dslice/2) (snd $ head t1)
-     mapM_ (uncurry lineTo) t1
-     mapM_ (uncurry lineTo) (reverse t0)
-     setSourceRGB cR cG cB
-     fillPreserve
-{-
-     setSourceRGB 0 0 0
-     save
-     identityMatrix
-     setLineWidth 1
-     strokePreserve
-     restore
--}
+off :: Double -> (SparkCounters.SparkCounters -> Double)
+       -> SparkCounters.SparkCounters
+       -> Double
+off spark_per_detail f t = fromIntegral hecSparksHeight - f t / spark_per_detail
+
 -------------------------------------------------------------------------------
 
 renderEvents :: Int -> ViewParameters

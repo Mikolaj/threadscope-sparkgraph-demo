@@ -1,4 +1,4 @@
-pristine:0000001864-2fb233a00bdbffe41af463e44da857f7c9d411f928c6e98ab199758098d2b2e9
+pristine:0000001864-809ed83fb702b75c7362e8410a850dc4e96f23dcea231e8a5392105f649e3299
 Starting with inventory:
 0000057931-abac2ae96674d7ba725832fd35d1a3a29979b5da1f1bffa834058446f884179b
 [TAG 0.1.2
@@ -563,3 +563,28 @@ mikolaj.konarski@gmail.com**20110621164821
  Ignore-this: 91ffa532828afd4eb72fd82f4878eb3e
 ] 
 hash: 0000001309-e3d17114ac9c7420fcb45768e165a39d85e95eb4851af4b8a9541a45c2bd950d
+[add drawing of a black line, 1 pixel above the outline of spark areas
+mikolaj.konarski@gmail.com**20110624112412
+ Ignore-this: 77e37fdc0f472b744d2f6b78b8275269
+] 
+hash: 0000003667-ed5fb93183fa011bc52549ab07a774811800bb5fcc0899051148b4b74cb0b2f0
+[make spark_per_pixel, etc., local to the graph stack, not global
+mikolaj.konarski@gmail.com**20110624115826
+ Ignore-this: 62c325fd381098d820a2237bc9cc6758
+] 
+hash: 0000003586-59a742004f0ac00d1ec826c918cc90439442081486797e2c1bc9ea8548037e1c
+[get rid of the hack compensating for line width difference
+mikolaj.konarski@gmail.com**20110624120531
+ Ignore-this: 32c561624ddfec9154bb1e5b65e199f5
+ Apparently, lines look differently when they are drawn after filling a region
+ than when they are drawn before. The fact that the line is being drawn
+ 1 pixel above the filled region does not change anything. Cairo must do
+ some aggresive antialiasing or there is a bug with fill that causes it to
+ overwrite pixels outside the desired area.
+] 
+hash: 0000001087-dba5baf4a7a0f9f8cf0d57e3010211d5a597138f90b9cde06c02dd03e33a3d9f
+[calculate spark_per_pixel for each HEC and graph stack separately
+mikolaj.konarski@gmail.com**20110624122933
+ Ignore-this: 43c5cffc403be63c7a759d64415e7953
+] 
+hash: 0000000711-5f5a06af374ad209a231ec47843cbc3e4fbbf8ac35b8a299a99fe29ed1b71fb9
