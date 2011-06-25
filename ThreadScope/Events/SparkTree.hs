@@ -34,8 +34,8 @@ data SparkDuration =
 
 data SparkTree
   = SparkTree
-      {-#UNPACK#-}!Timestamp  -- start time of this span
-      {-#UNPACK#-}!Timestamp  -- end time of this span
+      {-#UNPACK#-}!Timestamp  -- start time of the span represented by the tree
+      {-#UNPACK#-}!Timestamp  -- end time of the span represented by the tree
       SparkNode
   deriving Show
 
@@ -56,23 +56,39 @@ data SparkNode
 
 
 -- Warning: cannot be applied to a suffix of the log (assumes start at time 0).
-eventsToSparkDurations :: [GHC.Event] -> [SparkDuration]
+eventsToSparkDurations :: [GHC.Event] -> (Double, [SparkDuration])
 eventsToSparkDurations es =
-  let aux _startTime _startCounters [] = []
+  let aux _startTime _startCounters [] = (0, [])
       aux startTime startCounters (event : events) =
         case GHC.spec event of
           GHC.SparkCounters crt dud ovf cnv fiz gcd rem ->
             let endTime = GHC.time event
                 endCounters =
                   SparkCounters.SparkCounters crt dud ovf cnv fiz gcd rem
+                subC = SparkCounters.sub endCounters startCounters
+                duration = endTime - startTime
+                newMaxSparkValue = maxSparkRenderedValue subC duration
                 sd = SparkDuration
                        { startT = startTime,
                          endT = endTime,
                          startCount = startCounters,
                          endCount = endCounters }
-            in sd : aux endTime endCounters events
+                (oldMaxSparkValue, l) = aux endTime endCounters events
+            in (max oldMaxSparkValue newMaxSparkValue, sd : l)
           _otherEvent -> aux startTime startCounters events
   in aux 0 SparkCounters.zero es
+
+-- This is the maximal raw value, to be displayed at total zoom in.
+-- It's smoothed out (so lower values) at lower zoom levels.
+maxSparkRenderedValue :: SparkCounters.SparkCounters -> Timestamp -> Double
+maxSparkRenderedValue c duration =
+  fromIntegral (max (SparkCounters.sparksDud c +
+                     SparkCounters.sparksCreated c +
+                     SparkCounters.sparksOverflowed c)
+                    (SparkCounters.sparksFizzled c +
+                     SparkCounters.sparksConverted c +
+                     SparkCounters.sparksGCd c))
+  / fromIntegral duration
 
 
 mkSparkTree :: [SparkDuration] -> Timestamp -> SparkTree
@@ -165,6 +181,10 @@ sparkProfile slice start0 end0 t
      | end   <= split = flatten start (SparkTree s split l) rest
      | e - s > slice  = flatten start (SparkTree s split l) $
                         flatten start (SparkTree split e r) rest
+     -- A rule of thumb: if a node is narrower than slice, don't drill down,
+     -- even if the node sits astride slice boundaries and so the readings
+     -- for each of the two neigbouring slices will not be accurate,
+     -- but for the pair as a whole, they will be. Smooths the curve down.
      | otherwise      = t : rest
    flatten _start t@(SparkTree _s _e (SparkTreeLeaf _ _)) rest
      = t : rest
@@ -178,8 +198,8 @@ sparkProfile slice start0 end0 t
    chop sofar start (t : ts)
      | e <= start
      = if sofar /= SparkCounters.zero
-          then error "chop"
-          else chop sofar start ts
+       then error "chop"
+       else chop sofar start ts
      | s >= start + slice
      = sofar : chop SparkCounters.zero (start + slice) (t : ts)
      | e > start + slice
@@ -195,7 +215,7 @@ sparkProfile slice start0 end0 t
 
        created_in_this_slice
          | SparkTree _ _ (SparkTreeLeaf sc ec)     <- t  =
-           SparkCounters.sub ec sc
+           SparkCounters.rescale scale (SparkCounters.sub ec sc)
          | SparkTree _ _ (SparkTreeEmpty)          <- t  =
            SparkCounters.zero
          | SparkTree _ _ (SparkSplit _ _ _ cDelta) <- t  =
