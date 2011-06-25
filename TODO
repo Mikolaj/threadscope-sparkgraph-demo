@@ -4,15 +4,6 @@ Soon:
 http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.10.6199
 figure 15
 
-automatically set the interval size, depending on zoom factor and data (max),
-to represent a constant number of pixels
-
-we should use the same width black lines for the outline as the activity plot
-
-a black line for the outline, not the internal lines, draw it 1 point higher
-
-fix data mangling bugs: spurious peaks, splices shifted vs. events
-
 [GUI] put all the HEC0 bits together, both in the trace and in the timeline view
 ie in the timeline, top -> bottom: activity HEC0, sparks HEC0,
  activity HEC1, sparks HEC1, ...
@@ -52,7 +43,10 @@ consider making the graphs more accurate by drilling down the tree
 to the base events at each slice borders:
 they don't go down to the base events at each slice boundary
 but only at the two viewport borders (hence the extra slices
-at the ends dcoutts noticed)
+at the ends dcoutts noticed).
+The current state generally this results in smoothing the curve,
+but a side-effect is that the graphs grow higher visually
+(the max is higher) as the zoom level increases.
 
 or increase the accuracy by dividing increments not by the slice
 length (implicitly), but the length of the sum of tree node spans
