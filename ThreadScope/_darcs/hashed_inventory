@@ -1,4 +1,4 @@
-pristine:0000001864-9b6732703992807b7b8e27020e556db35ff99151b087e72d2fca87c78e63f6da
+pristine:0000001864-1b05b1931d970b8cafa3b87d895dd415eeb0d3a51bab4607a9d2658fd9d8384c
 Starting with inventory:
 0000057931-abac2ae96674d7ba725832fd35d1a3a29979b5da1f1bffa834058446f884179b
 [TAG 0.1.2
@@ -608,3 +608,18 @@ mikolaj.konarski@gmail.com**20110625012425
  Ignore-this: b1e01de5b7df40fd47647ebd004eab4f
 ] 
 hash: 0000000814-4b00356c772439101acec8f9d796670fc99c84765a6c33c375243d9ea9388332
+[refactor spark graphs now that they all have the same scale
+mikolaj.konarski@gmail.com**20110625092408
+ Ignore-this: 8f022594997edff32961e7c377867cd6
+] 
+hash: 0000004166-b83d153c31855f235f6dd5828e2d60b410b2e282248d3c5e0924f7e4186e9f42
+[refactor spark graph scaling to use spark per slice instead of per pixel
+mikolaj.konarski@gmail.com**20110625092721
+ Ignore-this: a43c9f0b44e27fd1c372656fb9249b71
+] 
+hash: 0000002092-7c0e9a426c66d9c75303187328a52e46d9cd781fad95f3b5596d771deb4df113
+[switch SparkCounters from Word64 to Double to fix broken zoom in
+mikolaj.konarski@gmail.com**20110625104412
+ Ignore-this: c457ed6f8780302e194b9f0da4297203
+] 
+hash: 0000002237-e2b65fa2f923fed097f1f37819060d483819408dbcf3ce3ca84053eed7d24452
