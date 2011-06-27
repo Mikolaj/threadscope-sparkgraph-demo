@@ -1,4 +1,4 @@
-pristine:0000001864-1b05b1931d970b8cafa3b87d895dd415eeb0d3a51bab4607a9d2658fd9d8384c
+pristine:0000001864-fb3d85f9ca0896563ca6ef95fdf19a6708a6e614118542068b64de17d1cd6fbf
 Starting with inventory:
 0000057931-abac2ae96674d7ba725832fd35d1a3a29979b5da1f1bffa834058446f884179b
 [TAG 0.1.2
@@ -623,3 +623,60 @@ mikolaj.konarski@gmail.com**20110625104412
  Ignore-this: c457ed6f8780302e194b9f0da4297203
 ] 
 hash: 0000002237-e2b65fa2f923fed097f1f37819060d483819408dbcf3ce3ca84053eed7d24452
+[add a mock-up of the pool size graph
+mikolaj.konarski@gmail.com**20110625212013
+ Ignore-this: 799a127e38e6fb33284507f04a3bdeb
+] 
+hash: 0000003787-466bd7a5415d6ac8a3d953393e6342a767bbaac3c9e3f0e946d9955a84de0154
+[visualiza rate of spark pool size change, for testing
+mikolaj.konarski@gmail.com**20110625220117
+ Ignore-this: 92195ff37c3e88ae0f50cc87beda271
+] 
+hash: 0000000946-a7eaea045175f2d5c6eb3917234fae9d4d1712f9be842617779d91d04b19c026
+[remove the absolute values from spark tree leaves; unneeded for pool size
+mikolaj.konarski@gmail.com**20110625222244
+ Ignore-this: 890d1a163b0b430b89b09548a2a53e91
+] 
+hash: 0000002280-7381c8ab35ce1c1478fc1b9f06d4bccec62aee9457147b4982f7fb625906d907
+[remove the endT field of spark counter durations (YAGNI)
+mikolaj.konarski@gmail.com**20110625223321
+ Ignore-this: 42445d5e50fa98aefe126bfed3803dd2
+] 
+hash: 0000000341-805c8a6ee3f0be546f4958ae75b6176c233249f81ad48cdce49052df85eec32d
+[rename SparkCounters to SparkStats, for pool size
+mikolaj.konarski@gmail.com**20110625232955
+ Ignore-this: 224b1ea89a0d6ae93802bf4adb7f10af
+] 
+hash: 0000008315-ee3a93f705778a7a9b77af8bca9bfc8df42b21ca9eee9ead837a772d3816992c
+[rename spark stats operations to reflect they are not raw log data
+mikolaj.konarski@gmail.com**20110625233409
+ Ignore-this: 7deb018c321c6129d32a5841d10f9e2e
+] 
+hash: 0000003392-d2c939df62b9a939388566d0821ed2cc43cf57c6d9d3ed923dfb0df311be088a
+[complete demo-grade spark pool size rendering
+mikolaj.konarski@gmail.com**20110627112839
+ Ignore-this: 43bdb99f5709367c9db7012cbfd9e34d
+] 
+hash: 0000004473-77534c94c81ca6d6ad69b07333fcb3b596df36b647ba5427359a0a8222ebaa98
+[change colours of spark pool size graph
+mikolaj.konarski@gmail.com**20110627114937
+ Ignore-this: 5258676e18c9b72507f936e77188f9d6
+] 
+hash: 0000001487-6c82c9dd9161a31b554e66998019af3d9d827c631a53305aab81366faad6b213
+[clean up data representation: spark stats only for deltas
+mikolaj.konarski@gmail.com**20110627140357
+ Ignore-this: cc6fca4f5ca1ae504ed91a776b4ef3c7
+ (previously spar stats (or spark counters) were also used for absolute
+ values at point, in addition to deltas of the values over intervals
+] 
+hash: 0000003077-9377497d37d58a84ad9c2bd60ae0782bd515dc99599c1cf9f2edcf04b53a9713
+[fix extrapolating pool size values after sample data ends
+mikolaj.konarski@gmail.com**20110627153119
+ Ignore-this: fa9b05bf7de8cde868cbe8d60bb4bea6
+] 
+hash: 0000001309-ac75eaca5d622e560b65be102badce4d5456ff39910de8c2784ed3821a94809f
+[make spark pool mean more accurate (but not yet weighted nor resampled)
+mikolaj.konarski@gmail.com**20110627193734
+ Ignore-this: 6fc5f3f27d52716274eec0c1b6a90e28
+] 
+hash: 0000005703-f54167d27ae5a40db465eb2e0b1f9acc5c5ee08807bbe6f39facff4c5f1a8a99
