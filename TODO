@@ -1,16 +1,8 @@
 Soon:
 
-25%/50%/75% percentile for pool size, in gnuplot
-http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.10.6199
-figure 15
-
-[GUI] put all the HEC0 bits together, both in the trace and in the timeline view
-ie in the timeline, top -> bottom: activity HEC0, sparks HEC0,
- activity HEC1, sparks HEC1, ...
-
-[GUI] draw a vertical scale: sparks/millisecond or something;
+[GUI] mark vertical scale units in the trace pane:
 a long label might be "spark creation/conversion rate, unit spark/ms"
-or "fizzled sparks/millisecond", etc.
+or "fizzled sparks/millisecond" or "Spark creation rate (sparks/millisecond)"
 
 [GUI] in the key, label the coloured areas, according to what they represent
 the title of the plot is "spark creation rate" and the key will have things
@@ -24,9 +16,21 @@ of tickboxes for activity, one column for spark creation, spark conversion
 
 Later:
 
-add pool size to threadscope
+fix the scarcity of sample data for cap 1 in our example event log
 
-resample (morally) uniformly, before doing the percentiles
+[GUI] put all the HEC0 bits together, both in the trace and in the timeline view
+ie in the timeline, top -> bottom: activity HEC0, sparks HEC0,
+ activity HEC1, sparks HEC1, ...
+
+[GUI] in the trace windown, enable/disable traces, but also
+reorder them by just dragging and dropping
+
+resample (morally) uniformly, before doing the percentiles --- but then
+it's a mean, not a median any more, with enough sample points
+
+25%/50%/75% percentile for pool size, in gnuplot, but see above about resampling
+http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.10.6199
+figure 15
 
 merge adjacent 0 samples:
 if we have equal adjacent samples we just take the second/last
@@ -65,13 +69,17 @@ it'd be quick since it's just bitmap scaling
 so the user can see the region in the old view
 that is expanding out to become the new view
 
-[GUI] let the user set the interval size, as an advanced option, _separately_
-for each graph stack, each HEC, each visible region at the current zoom level,
+[GUI] let the user set the interval size/scale,
+as an advanced option, _separately_ for each graph stack,
+each HEC, each visible region at the current zoom level,
 each selected region (if they are implemented)
 
 [GUI] a button for vertical zoom (clip graphs if they don't fit at that zoom)
 and/or select regions of time in the view
-and zoom only that region of display
+and zoom only that region of display;
+
+[GUI] an option to automatically change scale at zoom in to take
+into account only the visible and smoothed part of the graphs
 
 [GUI] select a region and display it in a separate tab
 (e.g. next to the events tab) and/or show in the tab for that selected time
@@ -107,3 +115,15 @@ and we don't know when exactly) (the 4K pool size guarantees that at least
 with large visible absolute spark transition, the invisible transitions
 can't be huge in proportion to the visible ones, so then linear extrapolaton
 is correct))
+
+
+Unrelated threadscope bugs:
+
+the vertical blue line vanishes is some zoom levels
+
+sideways scrolling leaves artifacts (e.g., the thicker fragments of the flat line at the end of the Activity graph)
+
+sometimes 2 labels are written on top of each other even at max zoom, e.g. "thread 3 yielding" and "thread 3 is runnable"
+
+may be a feature: filling graphs with colours is from line 1 upwards,
+not line 0, so lines at level 0 seem under the filled area, not level with it
