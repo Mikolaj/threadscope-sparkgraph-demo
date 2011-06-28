@@ -1,4 +1,4 @@
-pristine:0000001864-fb3d85f9ca0896563ca6ef95fdf19a6708a6e614118542068b64de17d1cd6fbf
+pristine:0000001864-101593c8a95514ca4c78ec973873df090c05b85a6e7985088a6314de5e3d8ab0
 Starting with inventory:
 0000057931-abac2ae96674d7ba725832fd35d1a3a29979b5da1f1bffa834058446f884179b
 [TAG 0.1.2
@@ -680,3 +680,13 @@ mikolaj.konarski@gmail.com**20110627193734
  Ignore-this: 6fc5f3f27d52716274eec0c1b6a90e28
 ] 
 hash: 0000005703-f54167d27ae5a40db465eb2e0b1f9acc5c5ee08807bbe6f39facff4c5f1a8a99
+[reorder spark conversion graphs
+mikolaj.konarski@gmail.com**20110628135601
+ Ignore-this: e415e0dc204690dd525b7527ea4e67dd
+] 
+hash: 0000000418-f98795642807b98e5366ef7ededd4b71d2a88ce87808755267015ca48fd8f834
+[change colours of spark graph areas
+mikolaj.konarski@gmail.com**20110628140548
+ Ignore-this: e94720590b13803c15f6fbce46aa1ec9
+] 
+hash: 0000001641-7d778b0c51b0f47f374c2b19b0e3970d7d615baed27c090ea37314c8f9fb5a3a
