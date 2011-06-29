@@ -24,7 +24,7 @@ import GHC.RTS.Events hiding (Event, GCWork, GCIdle)
 
 import Control.Monad
 
--- import Text.Printf
+import Text.Printf
 
 renderHEC :: Int -> ViewParameters
           -> Timestamp -> Timestamp -> (DurationTree, EventTree, SparkTree)
@@ -89,7 +89,7 @@ renderSparkConversion params !start0 !end0 t !maxSparkValue = do
 
 renderSparkPool :: ViewParameters -> Timestamp -> Timestamp -> SparkTree
                          -> Double -> Render ()
-renderSparkPool ViewParameters{..} !start0 !end0 t !maxSparkPool = do
+renderSparkPool params@ViewParameters{..} !start0 !end0 t !maxSparkPool = do
   let slice = round (fromIntegral spark_detail * scaleValue)
       -- round the start time down, and the end time up, to a slice boundary
       start = (start0 `div` slice) * slice
@@ -98,19 +98,19 @@ renderSparkPool ViewParameters{..} !start0 !end0 t !maxSparkPool = do
       f1 c = SparkStats.minPool c
       f2 c = SparkStats.meanPool c
       f3 c = SparkStats.maxPool c
-  -- TODO: sample points are probably shifted, wrongly averaged, etc.
   addSparks colourOuterPercentiles maxSparkPool f1 f2 start slice prof
   addSparks colourOuterPercentiles maxSparkPool f2 f3 start slice prof
   -- TODO: make f2 median, not mean; add other percentiles
   outlineSparks maxSparkPool f2 start slice prof
   outlineSparks maxSparkPool (const 0) start slice prof
+  addScale params maxSparkPool start end
 
 renderSpark :: ViewParameters -> Timestamp -> Timestamp -> SparkTree
                -> (SparkStats.SparkStats -> Double) -> (Double, Double, Double)
                -> (SparkStats.SparkStats -> Double) -> (Double, Double, Double)
                -> (SparkStats.SparkStats -> Double) -> (Double, Double, Double)
                -> Double -> Render ()
-renderSpark ViewParameters{..} start0 end0 t f1 c1 f2 c2 f3 c3 maxSparkValue= do
+renderSpark params@ViewParameters{..} start0 end0 t f1 c1 f2 c2 f3 c3 maxSparkValue = do
   let slice = round (fromIntegral spark_detail * scaleValue)
       -- round the start time down, and the end time up, to a slice boundary
       start = (start0 `div` slice) * slice
@@ -122,6 +122,7 @@ renderSpark ViewParameters{..} start0 end0 t f1 c1 f2 c2 f3 c3 maxSparkValue= do
   addSparks c1 maxSliceSpark (const 0) f1 start slice prof
   addSparks c2 maxSliceSpark f1 f2 start slice prof
   addSparks c3 maxSliceSpark f2 f3 start slice prof
+  addScale params maxSliceSpark start end
 
 spark_detail :: Int
 spark_detail = 4 -- in pixels
@@ -134,6 +135,15 @@ off :: Double -> (SparkStats.SparkStats -> Double)
        -> SparkStats.SparkStats
        -> Double
 off maxSliceSpark f t = fromIntegral hecSparksHeight * (1 - f t / maxSliceSpark)
+
+dashedLine1 :: Render ()
+dashedLine1 = do
+  save
+  identityMatrix
+  setDash [10,10] 0.0
+  setLineWidth 1
+  stroke
+  restore
 
 outlineSparks :: Double
                  -> (SparkStats.SparkStats -> Double)
@@ -182,6 +192,88 @@ addSparks (cR, cG, cB) maxSliceSpark f0 f1 start slice ts = do
       mapM_ (uncurry lineTo) (reverse t0)
       setSourceRGB cR cG cB
       fill
+
+
+-- There are ten minor ticks to a major tick and a semi-major tick
+-- occurs half way through a major tick (overlapping the corresponding
+-- minor tick).
+-- The timestamp values are in nanos-seconds (1e-9) i.e.
+-- a timestamp value of 1000000000 represents 1s.
+-- The x-position on the drawing canvas is in milliseconds (ms) (1e-3).
+-- scaleValue is used to divide a timestamp value to yield a pixel value.
+addScale :: ViewParameters -> Double -> Timestamp -> Timestamp -> Render ()
+addScale ViewParameters{..} maxSliceSpark start end = do
+  let dstart = fromIntegral start
+      dend = fromIntegral end
+      dheight = fromIntegral hecSparksHeight
+      -- TODO: divide maxSliceSpark, for better number display
+      incr = hecSparksHeight `div` 10
+      majorTick = 10 * incr
+  newPath
+  moveTo dstart 0
+  lineTo dstart dheight
+  setSourceRGBAhex black 1.0
+  save
+  identityMatrix
+  setLineWidth 1
+  stroke
+  restore
+
+  setSourceRGBAhex black 0.3
+  save
+  forM_ [0 .. 1] $ \h -> do
+    let y = fromIntegral (floor (fromIntegral h * fromIntegral majorTick / 2)) - 0.5
+    moveTo dstart y
+    lineTo dend y
+    dashedLine1
+  restore
+
+  selectFontFace "sans serif" FontSlantNormal FontWeightNormal
+  setFontSize 12
+  setSourceRGBAhex black 1.0
+  save
+  scale scaleValue 1.0
+  setLineWidth 0.5
+  drawTicks maxSliceSpark start scaleValue 0 incr majorTick hecSparksHeight
+  restore
+
+-- TODO: make it more robust when parameters change, e.g., if incr is too small
+drawTicks :: Double -> Timestamp -> Double -> Int -> Int -> Int -> Int -> Render ()
+drawTicks maxSliceSpark offset scaleValue pos incr majorTick endPos
+  = if pos <= endPos then do
+      draw_line (x0, hecSparksHeight - y0) (x1, hecSparksHeight - y1)
+      when (atMajorTick || atMidTick || tickWidthInPixels > 30) $ do
+            move_to (offset + 15,
+                     fromIntegral hecSparksHeight - pos + 4)
+            m <- getMatrix
+            identityMatrix
+            tExtent <- textExtents tickText
+            (fourPixels, _) <- deviceToUserDistance 4 0
+            when (textExtentsWidth tExtent + fourPixels < fromIntegral tickWidthInPixels || atMidTick || atMajorTick) $ do
+              textPath tickText
+              C.fill
+            setMatrix m
+      drawTicks maxSliceSpark offset scaleValue (pos+incr) incr majorTick endPos
+    else
+      return ()
+    where
+    tickWidthInPixels :: Int
+    tickWidthInPixels = truncate ((fromIntegral incr) / scaleValue)
+    tickText = showTickText (maxSliceSpark * fromIntegral pos
+                             / fromIntegral hecSparksHeight)
+    atMidTick = pos `mod` (majorTick `div` 2) == 0
+    atMajorTick = pos `mod` majorTick == 0
+    (x0, y0, x1, y1) = if atMajorTick then
+                         (offset, pos, offset+13, pos)
+                       else
+                         if atMidTick then
+                           (offset, pos, offset+10, pos)
+                         else
+                           (offset, pos, offset+6, pos)
+
+showTickText :: Double -> String
+showTickText pos
+  = printf "%.2f" pos
 
 -------------------------------------------------------------------------------
 
