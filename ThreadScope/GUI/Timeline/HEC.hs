@@ -206,10 +206,11 @@ addScale ViewParameters{..} maxSliceSpark start end = do
   let dstart = fromIntegral start
       dend = fromIntegral end
       dheight = fromIntegral hecSparksHeight
-      -- TODO: divide maxSliceSpark, for better number display
+      -- TODO: this is slightly incorrect, but probably at most 1 pixel off
       maxSpark = if maxSliceSpark < 100
                  then maxSliceSpark  -- to small, accuracy would suffer
                  else fromIntegral (2 * (ceiling maxSliceSpark ` div` 2))
+      -- TODO: divide maxSliceSpark instead, for nicer round numbers display
       incr = hecSparksHeight `div` 10
       majorTick = 10 * incr
   newPath
