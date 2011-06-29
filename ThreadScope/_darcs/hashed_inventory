@@ -1,4 +1,4 @@
-pristine:0000001864-fa1c941d1764cc3a3a1a3082203092549c6446306cbeca027faa056ea92caba8
+pristine:0000001864-d1fda73252ff94a58b3d016a8784237593f758f900a4a62978df250ed904e6b1
 Starting with inventory:
 0000057931-abac2ae96674d7ba725832fd35d1a3a29979b5da1f1bffa834058446f884179b
 [TAG 0.1.2
@@ -705,3 +705,18 @@ mikolaj.konarski@gmail.com**20110629112231
  Ignore-this: 19f5f51aa546880115b1aef26ff083ec
 ] 
 hash: 0000002929-c381873b61bbcf50866444703cc87f90ad691e8b2b87df0680a5fefd4ef61d0b
+[change tick colour to blue, to be distinct from the graph outline colour
+mikolaj.konarski@gmail.com**20110629113352
+ Ignore-this: 8749a83f14eca0213c4b76c80868c5b
+] 
+hash: 0000000348-f5b72dfe26b756b9a8b6ddcb9d160b908269608aefcfe2f7d0540c8f2df2761e
+[avoid printing the 0 tick value, since it often overwrites the graph
+mikolaj.konarski@gmail.com**20110629113509
+ Ignore-this: 927442f80685f743e6c4f28e00eb856d
+] 
+hash: 0000000358-08164b7e41517452867aee365402851946a3479f1d9e61678bc2f67b073e0bbd
+[snap the graph height to the nearest even int, if big enough
+mikolaj.konarski@gmail.com**20110629113603
+ Ignore-this: c2e972338f8686a9763c8e804927ccfd
+] 
+hash: 0000001335-5350a07c3ee76c7b66ff8227d34b0fc9107b5f94a37257196c80359c4fe9952f
