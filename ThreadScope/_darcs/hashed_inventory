@@ -1,4 +1,4 @@
-pristine:0000001864-d1fda73252ff94a58b3d016a8784237593f758f900a4a62978df250ed904e6b1
+pristine:0000001864-344f198bc38a31e756f40bd830f67086bf2db493c7ffe729356584e0165303d2
 Starting with inventory:
 0000057931-abac2ae96674d7ba725832fd35d1a3a29979b5da1f1bffa834058446f884179b
 [TAG 0.1.2
@@ -720,3 +720,23 @@ mikolaj.konarski@gmail.com**20110629113603
  Ignore-this: c2e972338f8686a9763c8e804927ccfd
 ] 
 hash: 0000001335-5350a07c3ee76c7b66ff8227d34b0fc9107b5f94a37257196c80359c4fe9952f
+[tweak spark graph colours
+mikolaj.konarski@gmail.com**20110629140714
+ Ignore-this: 9522302faf95a803da3a2b55cc4d2949
+] 
+hash: 0000000695-6535820b7b60ead8bdb4b50dd1c7adc34a2e4bd2760c6f067558a82fe383bda7
+[move spark graph colour definitions to ViewerColours.hs
+mikolaj.konarski@gmail.com**20110629142349
+ Ignore-this: 327915501244d2620c5e9a0db0472cfd
+] 
+hash: 0000002238-68cb2596d7cfb1f0aca99384caed19581feb02d6d8b53f24d42faa87f1153922
+[fix spark transition rate units: now it's spark/ms
+mikolaj.konarski@gmail.com**20110629145439
+ Ignore-this: ca7f8d97a3e7e7b0f2cf1c02a4934ad6
+] 
+hash: 0000001710-792ae6ebad4bbeebf97df9268d1dab6f649c9ca783ebb4817fbc64ebeae0cd3f
+[fix spurious blue lines by drawing vertical scales only at timeline start
+mikolaj.konarski@gmail.com**20110629150901
+ Ignore-this: 26fc8c51bd58dd978044c13006593a77
+] 
+hash: 0000000434-9c7a54e335382c29002527ce3cb5d281bffac92248988e4bdf1fdef84c755089

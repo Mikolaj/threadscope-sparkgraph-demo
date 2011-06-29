@@ -76,7 +76,8 @@ renderSparkCreation params !start0 !end0 t !maxSparkValue = do
       f2 c = f1 c + SparkStats.rateCreated c
       f3 c = f2 c + SparkStats.rateOverflowed c
   renderSpark params start0 end0 t
-    f1 colourFizzledDuds f2 (0, 1, 0) f3 (1, 0, 0) maxSparkValue
+    f1 fizzledDudsColour f2 createdConvertedColour f3 overflowedColour
+    maxSparkValue
 
 renderSparkConversion :: ViewParameters -> Timestamp -> Timestamp -> SparkTree
                          -> Double -> Render ()
@@ -85,7 +86,8 @@ renderSparkConversion params !start0 !end0 t !maxSparkValue = do
       f2 c = f1 c + SparkStats.rateGCd c
       f3 c = f2 c + SparkStats.rateConverted c
   renderSpark params start0 end0 t
-    f1 colourFizzledDuds f2 (1, 0.5, 0) {-gcColour-} f3 (0, 1, 0) maxSparkValue
+    f1 fizzledDudsColour f2 gcColour f3 createdConvertedColour
+    maxSparkValue
 
 renderSparkPool :: ViewParameters -> Timestamp -> Timestamp -> SparkTree
                          -> Double -> Render ()
@@ -98,17 +100,17 @@ renderSparkPool params@ViewParameters{..} !start0 !end0 t !maxSparkPool = do
       f1 c = SparkStats.minPool c
       f2 c = SparkStats.meanPool c
       f3 c = SparkStats.maxPool c
-  addSparks colourOuterPercentiles maxSparkPool f1 f2 start slice prof
-  addSparks colourOuterPercentiles maxSparkPool f2 f3 start slice prof
+  addSparks outerPercentilesColour maxSparkPool f1 f2 start slice prof
+  addSparks outerPercentilesColour maxSparkPool f2 f3 start slice prof
   -- TODO: make f2 median, not mean; add other percentiles
   outlineSparks maxSparkPool f2 start slice prof
   outlineSparks maxSparkPool (const 0) start slice prof
-  addScale params maxSparkPool start end
+  when (start0 == 0) $ addScale params maxSparkPool start end
 
 renderSpark :: ViewParameters -> Timestamp -> Timestamp -> SparkTree
-               -> (SparkStats.SparkStats -> Double) -> (Double, Double, Double)
-               -> (SparkStats.SparkStats -> Double) -> (Double, Double, Double)
-               -> (SparkStats.SparkStats -> Double) -> (Double, Double, Double)
+               -> (SparkStats.SparkStats -> Double) -> Color
+               -> (SparkStats.SparkStats -> Double) -> Color
+               -> (SparkStats.SparkStats -> Double) -> Color
                -> Double -> Render ()
 renderSpark params@ViewParameters{..} start0 end0 t f1 c1 f2 c2 f3 c3 maxSparkValue = do
   let slice = round (fromIntegral spark_detail * scaleValue)
@@ -118,18 +120,16 @@ renderSpark params@ViewParameters{..} start0 end0 t f1 c1 f2 c2 f3 c3 maxSparkVa
       prof  = sparkProfile slice start end t
       -- Maximum number of sparks per slice for current data.
       maxSliceSpark = fromIntegral slice * maxSparkValue
+      -- Maximum spark transition rate in spark/ms.
+      maxSlice = maxSparkValue * 1000000
   outlineSparks maxSliceSpark f3 start slice prof
   addSparks c1 maxSliceSpark (const 0) f1 start slice prof
   addSparks c2 maxSliceSpark f1 f2 start slice prof
   addSparks c3 maxSliceSpark f2 f3 start slice prof
-  addScale params maxSliceSpark start end
+  when (start0 == 0) $ addScale params maxSlice start end
 
 spark_detail :: Int
 spark_detail = 4 -- in pixels
-
-colourOuterPercentiles, colourFizzledDuds :: (Double, Double, Double)
-colourOuterPercentiles = (0.8, 0.8, 0.8)
-colourFizzledDuds      = (0.5, 0.5, 0.5)
 
 off :: Double -> (SparkStats.SparkStats -> Double)
        -> SparkStats.SparkStats
@@ -168,14 +168,14 @@ outlineSparks maxSliceSpark f start slice ts = do
       stroke
       restore
 
-addSparks :: (Double, Double, Double)
+addSparks :: Color
              -> Double
              -> (SparkStats.SparkStats -> Double)
              -> (SparkStats.SparkStats -> Double)
              -> Timestamp -> Timestamp
              -> [SparkStats.SparkStats]
              -> Render ()
-addSparks (cR, cG, cB) maxSliceSpark f0 f1 start slice ts = do
+addSparks colour maxSliceSpark f0 f1 start slice ts = do
   case ts of
     [] -> return ()
     ts -> do
@@ -190,7 +190,7 @@ addSparks (cR, cG, cB) maxSliceSpark f0 f1 start slice ts = do
       moveTo (dstart-dslice/2) (snd $ head t1)
       mapM_ (uncurry lineTo) t1
       mapM_ (uncurry lineTo) (reverse t0)
-      setSourceRGB cR cG cB
+      setSourceRGBAhex colour 1.0
       fill
 
 
@@ -202,15 +202,15 @@ addSparks (cR, cG, cB) maxSliceSpark f0 f1 start slice ts = do
 -- The x-position on the drawing canvas is in milliseconds (ms) (1e-3).
 -- scaleValue is used to divide a timestamp value to yield a pixel value.
 addScale :: ViewParameters -> Double -> Timestamp -> Timestamp -> Render ()
-addScale ViewParameters{..} maxSliceSpark start end = do
+addScale ViewParameters{..} maxSpark start end = do
   let dstart = fromIntegral start
       dend = fromIntegral end
       dheight = fromIntegral hecSparksHeight
       -- TODO: this is slightly incorrect, but probably at most 1 pixel off
-      maxSpark = if maxSliceSpark < 100
-                 then maxSliceSpark  -- to small, accuracy would suffer
-                 else fromIntegral (2 * (ceiling maxSliceSpark ` div` 2))
-      -- TODO: divide maxSliceSpark instead, for nicer round numbers display
+      maxS = if maxSpark < 100
+             then maxSpark  -- to small, accuracy would suffer
+             else fromIntegral (2 * (ceiling maxSpark ` div` 2))
+      -- TODO: divide maxSpark instead, for nicer round numbers display
       incr = hecSparksHeight `div` 10
       majorTick = 10 * incr
   newPath
@@ -238,12 +238,12 @@ addScale ViewParameters{..} maxSliceSpark start end = do
   save
   scale scaleValue 1.0
   setLineWidth 0.5
-  drawTicks maxSpark start scaleValue 0 incr majorTick hecSparksHeight
+  drawTicks maxS start scaleValue 0 incr majorTick hecSparksHeight
   restore
 
 -- TODO: make it more robust when parameters change, e.g., if incr is too small
 drawTicks :: Double -> Timestamp -> Double -> Int -> Int -> Int -> Int -> Render ()
-drawTicks maxSpark offset scaleValue pos incr majorTick endPos
+drawTicks maxS offset scaleValue pos incr majorTick endPos
   = if pos <= endPos then do
       draw_line (x0, hecSparksHeight - y0) (x1, hecSparksHeight - y1)
       when (pos > 0
@@ -258,13 +258,13 @@ drawTicks maxSpark offset scaleValue pos incr majorTick endPos
               textPath tickText
               C.fill
             setMatrix m
-      drawTicks maxSpark offset scaleValue (pos+incr) incr majorTick endPos
+      drawTicks maxS offset scaleValue (pos+incr) incr majorTick endPos
     else
       return ()
     where
     tickWidthInPixels :: Int
     tickWidthInPixels = truncate ((fromIntegral incr) / scaleValue)
-    tickText = showTickText (maxSpark * fromIntegral pos
+    tickText = showTickText (maxS * fromIntegral pos
                              / fromIntegral hecSparksHeight)
     atMidTick = pos `mod` (majorTick `div` 2) == 0
     atMajorTick = pos `mod` majorTick == 0
