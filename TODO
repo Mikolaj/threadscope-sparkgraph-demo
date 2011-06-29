@@ -131,3 +131,10 @@ sometimes 2 tick labels (showing time) overlap
 
 may be a feature: filling graphs with colours is from line 1 upwards,
 not line 0, so lines at level 0 seem under the filled area, not level with it
+
+the light blue vertical lines get sometimes randomly darker when scrolling
+by moving the scrollbar handle to the right
+
+a few levels of zoom in and then zoom out sometimes results in only
+a right fragment of the timeline are shown, no indication in the scrollbar
+that scroll is possible, but scrolling indeed fixes the viewt
