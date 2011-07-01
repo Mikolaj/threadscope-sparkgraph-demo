@@ -1,10 +1,17 @@
-# This repo contains a snapshot of a version of ghc-events,
-# from http://code.haskell.org/~duncan/ghc-events/
-# and a copy of http://code.haskell.org/~duncan/parlist.hs
-# Both are slightly modified. It also contains plot scripts
-# generated using gnuplot (http://www.gnuplot.info/).
+# This repo contains a snapshot of a version of ThreadScope from
+# http://code.haskell.org/ThreadScope/
+# a version of ghc-events from
+# http://code.haskell.org/~duncan/ghc-events/
+# and a copy of the sample parallel Haskell program
+# http://code.haskell.org/~duncan/parlist.hs
+# All three are modified.
+# There are also plot scripts generated using gnuplot, see
+# http://www.gnuplot.info/
 # The ghc version required to compile the included ghc-events
-# is the one from http://darcs.haskell.org/~duncan/ghc/
+# is the one from
+# http://darcs.haskell.org/~duncan/ghc/
+# Threadscope sources can be compiled with any GHC version
+# that copes with gtk2hs.
 
 # Instructions:
 # To see the plots, compile and run tests (using the right ghc version).
@@ -15,7 +22,8 @@ ghc -O -eventlog -rtsopts parlist.hs --make -threaded
 ghc -O -eventlog -rtsopts parlist2.hs --make -threaded
 ./parlist2 +RTS -N2 -ls
 
-# Then compile tools and prepare the data
+# At this point, the data can be loaded into and visualized using ThreadScope.
+# To see gnuplot graphs of the data, compile the tools and do the following
 # (shown only for parlist.eventlog; you can do the same using parlist2.eventlog
 # and see different plots, for a test with faulty parallelisation).
 
