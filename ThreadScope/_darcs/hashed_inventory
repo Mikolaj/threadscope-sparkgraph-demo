@@ -1,4 +1,4 @@
-pristine:0000001864-344f198bc38a31e756f40bd830f67086bf2db493c7ffe729356584e0165303d2
+pristine:0000001864-b860f2c939585f62c53443be8397d01cb8e0570ed3a695d3c6b4bb1fa2d2c09e
 Starting with inventory:
 0000057931-abac2ae96674d7ba725832fd35d1a3a29979b5da1f1bffa834058446f884179b
 [TAG 0.1.2
@@ -740,3 +740,33 @@ mikolaj.konarski@gmail.com**20110629150901
  Ignore-this: 26fc8c51bd58dd978044c13006593a77
 ] 
 hash: 0000000434-9c7a54e335382c29002527ce3cb5d281bffac92248988e4bdf1fdef84c755089
+[make all the itroduced types private
+mikolaj.konarski@gmail.com**20110701202545
+ Ignore-this: 372b821591d4578b83058311064dad95
+] 
+hash: 0000001023-a139a220c6e2440c99dd15a695a7d739605f9d0d33db3cef0fc1ecad6b4d5dc2
+[clarify the function of the zeroed spark stats
+mikolaj.konarski@gmail.com**20110701214922
+ Ignore-this: 71ceea2e0638f03fc76ec18ec9e50605
+] 
+hash: 0000001068-e5d25d3b92b422e073c769910341e60cd5bd64630422fbe738694e5da205dc7b
+[explain the semantics of spark stat operations
+mikolaj.konarski@gmail.com**20110701234239
+ Ignore-this: 67bb45800faaa3312ca58b3cdb93f45a
+] 
+hash: 0000002885-b1bd6dade8e3f3895f937d9f78be79cc8d8b9375dc217d3bf9970c8e9028fe9e
+[clarify "spark duration" and change semantics to match description
+mikolaj.konarski@gmail.com**20110702114928
+ Ignore-this: 120655f02d1df7c7d9082b6203d1c654
+] 
+hash: 0000002038-4c43b8a350d204dad72e0079d4081527e166133b0b96202d9b74cebda4b6f433
+[improve documentation and layout of SparTree.hs
+mikolaj.konarski@gmail.com**20110702142623
+ Ignore-this: 25dbbcee5293f512d66ec5564a118bfb
+] 
+hash: 0000008721-ecbcf02dc87c04bf1215c9e9a345fb0bd039d4f4712fc4603d1f7f00421a5693
+[improve documentation of spark rendering
+mikolaj.konarski@gmail.com**20110702145256
+ Ignore-this: c672077024b937517add136746352ed5
+] 
+hash: 0000001659-08c100c83b268f678efda585de5b6ec8d3493bc2c0e305a22066b2808f253870
