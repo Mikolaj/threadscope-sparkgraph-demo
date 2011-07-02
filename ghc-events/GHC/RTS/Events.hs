@@ -5,9 +5,9 @@
  - Events.hs
  -   Parser functions for GHC RTS EventLog framework.
  -}
- 
+
 module GHC.RTS.Events (
-       -- * The event log types                       
+       -- * The event log types
        EventLog(..),
        EventType(..),
        Event(..),
@@ -105,7 +105,7 @@ data EventType =
     size :: Maybe EventTypeSize -- ^ 'Nothing' indicates variable size
   } deriving (Show, Eq)
 
-data Event = 
+data Event =
   Event {
     time :: {-# UNPACK #-}!Timestamp,
     spec :: EventTypeSpecificInfo
@@ -114,13 +114,13 @@ data Event =
 data EventTypeSpecificInfo
   = Startup            { n_caps :: Int
                        }
-  | EventBlock         { end_time     :: Timestamp, 
-                         cap          :: Int, 
+  | EventBlock         { end_time     :: Timestamp,
+                         cap          :: Int,
                          block_events :: [Event]
                        }
   | CreateThread       { thread :: {-# UNPACK #-}!ThreadId
                        }
-  | RunThread          { thread :: {-# UNPACK #-}!ThreadId 
+  | RunThread          { thread :: {-# UNPACK #-}!ThreadId
                        }
   | StopThread         { thread :: {-# UNPACK #-}!ThreadId,
                          status :: ThreadStopStatus
@@ -139,9 +139,9 @@ data EventTypeSpecificInfo
                        }
   | SparkCounters      { sparksCreated, sparksDud, sparksOverflowed,
                          sparksConverted, sparksFizzled, sparksGCd,
-                         sparksRemaining :: {-# UNPACK #-}! Word64
+                         sparksRemaining :: {-# UNPACK #-}!Word64
                        }
-  | WakeupThread       { thread :: {-# UNPACK #-}!ThreadId, 
+  | WakeupThread       { thread :: {-# UNPACK #-}!ThreadId,
                          otherCap :: {-# UNPACK #-}!Int
                        }
   | Shutdown           { }
@@ -251,7 +251,7 @@ mkCapsetType n = case n of
 
 -- reader/Get monad that passes around the event types
 type GetEvents a = ReaderT EventParsers (ErrorT String Get) a
-  
+
 newtype EventParsers = EventParsers (Array Int (GetEvents EventTypeSpecificInfo))
 
 type GetHeader a = ErrorT String Get a
@@ -266,41 +266,41 @@ getE = lift $ lift get
 -- Binary instances
 
 getEventType :: GetHeader EventType
-getEventType = do 
+getEventType = do
            etNum <- getH
            size <- getH :: GetHeader EventTypeSize
            let etSize = if size == 0xffff then Nothing else Just size
            -- 0xffff indicates variable-sized event
            etDescLen <- getH :: GetHeader EventTypeDescLen
-           etDesc <- getEtDesc (fromIntegral etDescLen) 
+           etDesc <- getEtDesc (fromIntegral etDescLen)
            etExtraLen <- getH :: GetHeader Word32
            _skip  <- replicateM_ (fromIntegral etExtraLen) (lift getWord8)
            ete <- getH :: GetHeader Marker
            when (ete /= EVENT_ET_END) $
               throwError ("Event Type end marker not found.")
            return (EventType etNum etDesc etSize)
-           where 
+           where
              getEtDesc :: Int -> GetHeader [Char]
              getEtDesc s = replicateM s (getH :: GetHeader Char)
 
 getHeader :: GetHeader Header
-getHeader = do 
+getHeader = do
            hdrb <- getH :: GetHeader Marker
            when (hdrb /= EVENT_HEADER_BEGIN) $
                 throwError "Header begin marker not found"
            hetm <- getH :: GetHeader Marker
-           when (hetm /= EVENT_HET_BEGIN) $ 
+           when (hetm /= EVENT_HET_BEGIN) $
                 throwError "Header Event Type begin marker not found"
            ets <- getEventTypes
            emark <- getH :: GetHeader Marker
            when (emark /= EVENT_HEADER_END) $
                 throwError "Header end marker not found"
            return (Header ets)
-     where    
+     where
        getEventTypes :: GetHeader [EventType]
        getEventTypes = do
            m <- getH :: GetHeader Marker
-           case () of 
+           case () of
             _ | m == EVENT_ET_BEGIN -> do
                    et <- getEventType
                    nextET <- getEventTypes
@@ -311,9 +311,9 @@ getHeader = do
                    throwError "Malformed list of Event Types in header"
 
 getEvent :: EventParsers -> GetEvents (Maybe Event)
-getEvent (EventParsers parsers) = do 
+getEvent (EventParsers parsers) = do
   etRef <- getE :: GetEvents EventTypeNum
-  if (etRef == EVENT_DATA_END) 
+  if (etRef == EVENT_DATA_END)
      then return Nothing
      else do !ts   <- getE
              -- trace ("event: " ++ show etRef) $ do
@@ -328,9 +328,9 @@ getEvent (EventParsers parsers) = do
 --
 -- The event log file declares the size for each event type, so we can
 -- select the correct parser for the event type based on its size.  We
--- do this once after parsing the header: given the EventTypes, we build 
+-- do this once after parsing the header: given the EventTypes, we build
 -- an array of event parsers indexed by event type.
--- 
+--
 -- For each event type, we may have multiple parsers for different
 -- versions of the event, indexed by size.  These are listed in the
 -- eventTypeParsers list below.  For the given log file we select the
@@ -349,7 +349,7 @@ getEvent (EventParsers parsers) = do
 
 mkEventTypeParsers :: IntMap EventType
                    -> Array Int (GetEvents EventTypeSpecificInfo)
-mkEventTypeParsers etypes 
+mkEventTypeParsers etypes
  = accumArray (flip const) undefined (0, max_event_num)
     ([ (num, undeclared_etype num) | num <- [0..max_event_num] ] ++
      [ (num, parser num etype) | (num, etype) <- M.toList etypes ])
@@ -400,7 +400,7 @@ mkEventTypeParsers etypes
                      in  if sz == et_size
                             then best
                             else do r <- best
-                                    lift . lift $ 
+                                    lift . lift $
                                       replicateM_ (fromIntegral (et_size - sz))
                                                 getWord8
                                     return r
@@ -409,7 +409,7 @@ mkEventTypeParsers etypes
 eventTypeParsers :: Array Int [(EventTypeSize, GetEvents EventTypeSpecificInfo)]
 eventTypeParsers = accumArray (flip (:)) [] (0,NUM_EVENT_TAGS) [
 
- (EVENT_STARTUP, 
+ (EVENT_STARTUP,
   (sz_cap, do -- (n_caps)
       c <- getE :: GetEvents CapNo
       return Startup{ n_caps = fromIntegral c }
@@ -424,7 +424,7 @@ eventTypeParsers = accumArray (flip (:)) [] (0,NUM_EVENT_TAGS) [
       eparsers <- ask
       let e_events = runGet (runErrorT $ runReaderT (getEventBlock eparsers) eparsers) lbs
       return EventBlock{ end_time=end_time,
-                         cap= fromIntegral c, 
+                         cap= fromIntegral c,
                          block_events=case e_events of
                                         Left s -> error s
                                         Right es -> es }
@@ -540,11 +540,11 @@ eventTypeParsers = accumArray (flip (:)) [] (0,NUM_EVENT_TAGS) [
 
  -----------------------
  -- GHC 6.12 compat: GHC 6.12 reported the wrong sizes for some events,
- -- so we have to recognise those wrong sizes here for backwards 
+ -- so we have to recognise those wrong sizes here for backwards
  -- compatibility.
 
- (EVENT_STARTUP, 
-  (0, do -- BUG in GHC 6.12: the startup event was incorrectly 
+ (EVENT_STARTUP,
+  (0, do -- BUG in GHC 6.12: the startup event was incorrectly
          -- declared as size 0, so we accept it here.
       c <- getE :: GetEvents CapNo
       return Startup{ n_caps = fromIntegral c }
@@ -655,13 +655,13 @@ variableEventTypeParsers = M.fromList [
 
  (EVENT_LOG_MSG, do -- (msg)
       num <- getE :: GetEvents Word16
-      bytes <- replicateM (fromIntegral num) getE 
+      bytes <- replicateM (fromIntegral num) getE
       return Message{ msg = bytesToString bytes }
    ),
 
  (EVENT_USER_MSG, do -- (msg)
       num <- getE :: GetEvents Word16
-      bytes <- replicateM (fromIntegral num) getE 
+      bytes <- replicateM (fromIntegral num) getE
       return UserMessage{ msg = bytesToString bytes }
    ),
  (EVENT_PROGRAM_ARGS, do -- (capset, [arg])
@@ -711,7 +711,7 @@ getData = do
    db <- getE :: GetEvents Marker
    when (db /= EVENT_DATA_BEGIN) $ throwError "Data begin marker not found"
    eparsers <- ask
-   let 
+   let
        getEvents :: [Event] -> GetEvents Data
        getEvents events = do
          mb_e <- getEvent eparsers
@@ -751,7 +751,7 @@ readEventLogFromFile f = do
 -- Utilities
 
 -- | An event annotated with the Capability that generated it, if any
-data CapEvent 
+data CapEvent
   = CapEvent { ce_cap   :: Maybe Int,
                ce_event :: Event
                -- we could UNPACK ce_event, but the Event constructor
@@ -766,10 +766,10 @@ sortEvents = sortGroups . groupEvents
 -- capability that generated it.
 sortGroups :: [(Maybe Int, [Event])] -> [CapEvent]
 sortGroups groups = mergesort' (compare `on` (time . ce_event)) $
-                      [ [ CapEvent cap e | e <- es ] 
+                      [ [ CapEvent cap e | e <- es ]
                       | (cap, es) <- groups ]
      -- sorting is made much faster by the way that the event stream is
-     -- divided into blocks of events.  
+     -- divided into blocks of events.
      --  - All events in a block belong to a particular capability
      --  - The events in a block are ordered by time
      --  - blocks for the same capability appear in time order in the event
@@ -780,7 +780,7 @@ sortGroups groups = mergesort' (compare `on` (time . ce_event)) $
      -- merge the resulting lists.
 
 groupEvents :: [Event] -> [(Maybe Int, [Event])]
-groupEvents es = (Nothing, n_events) : 
+groupEvents es = (Nothing, n_events) :
                  [ (Just (cap (head blocks)), concatMap block_events blocks)
                  | blocks <- groups ]
   where
