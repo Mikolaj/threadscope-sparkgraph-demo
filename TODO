@@ -28,7 +28,13 @@ ie in the timeline, top -> bottom: activity HEC0, sparks HEC0,
 reorder them by just dragging and dropping
 
 resample (morally) uniformly, before doing the percentiles --- but then
-it's a mean, not a median any more, with enough sample points
+it's a mean, not a median any more, with enough sample points;
+however percentiles still make sense --- they are not just mean*(n/m),
+e.g., for y=5, all percentiles are 5, while for y=x, from 0 to 10,
+they differ, regardless of sample destity and uniformity, except trivial cases
+
+and/or extrapolate data for large zoom levels with scare samples
+by slated lines, not just horizontal lines (which work great with many samples)
 
 25%/50%/75% percentile for pool size, in gnuplot, but see above about resampling
 http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.10.6199
