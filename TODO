@@ -1,6 +1,25 @@
 Soon:
 
-improve the look of vertical scales and ticks and their code
+fix the scarcity of sample data for cap 1 in our example event log
+
+resample (morally) uniformly, before doing the percentiles --- but then
+it's a mean, not a median any more, with enough sample points;
+however percentiles still make sense --- they are not just mean*(n/m),
+e.g., for y=5, all percentiles are 5, while for y=x, from 0 to 10,
+they differ, regardless of sample destity and uniformity, except trivial cases
+
+25%/50%/75% percentile for pool size, in gnuplot or, if easy, in threadscope
+http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.10.6199
+figure 15
+
+remove the grey halo in trivial cases of pool size,
+like the line:  ___/----, but keep min/max for ___/\___
+
+draw the scales (horizontal and vertical) in such a way that they're
+always visible, regardless of scrolling
+
+review and document vertical scales and pool size graph code,
+after they are rewritten
 
 [GUI] mark vertical scale units in the trace pane:
 a long label might be "spark creation/conversion rate, unit spark/ms"
@@ -16,40 +35,41 @@ that the _areas_ are proportional to the total number and graphs to rates
 of tickboxes for activity, one column for spark creation, spark conversion
 
 
+
 Later:
 
-fix the scarcity of sample data for cap 1 in our example event log
+the same aggregate style for the activity graph, to see min/max
+(the green are does not convey any extra information, unlike
+the tricolour areas in rate graphs)
 
 [GUI] put all the HEC0 bits together, both in the trace and in the timeline view
 ie in the timeline, top -> bottom: activity HEC0, sparks HEC0,
  activity HEC1, sparks HEC1, ...
 
-[GUI] in the trace windown, enable/disable traces, but also
+[GUI] in the trace window, enable/disable traces, but also
 reorder them by just dragging and dropping
 
-resample (morally) uniformly, before doing the percentiles --- but then
-it's a mean, not a median any more, with enough sample points;
-however percentiles still make sense --- they are not just mean*(n/m),
-e.g., for y=5, all percentiles are 5, while for y=x, from 0 to 10,
-they differ, regardless of sample destity and uniformity, except trivial cases
-
-and/or extrapolate data for large zoom levels with scare samples
-by slated lines, not just horizontal lines (which work great with many samples)
-
-25%/50%/75% percentile for pool size, in gnuplot, but see above about resampling
-http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.10.6199
-figure 15
+and/or extrapolate data for large zoom levels with scarce samples
+by slated lines, not just horizontal lines (which work great with
+numerous samples, though)
 
 merge adjacent 0 samples:
 if we have equal adjacent samples we just take the second/last
 can be done when it's still a list, before making the tree
 simple linear pass
 and lazy too
+does not make sense in per-spark events mode
 
 use the extra info about when the spark pool gets full and empty;
 we know when the spark pool becomes empty because we can observe
 that the threads evaluating sparks terminate; similarly, we know overflow
-only occurs when the pool is full
+only occurs when the pool is full; but note the following:
+"dcoutts: also noticed that we cannot currently reliably discover when the spark
+queue is empty. I had thought that "the" spark thread terminating
+implied that the queue is empty, however there can be multiple spark
+threads and they can also terminate when there are other threads on that
+capability's run queue (normal forkIO work takes precedence over
+evaluating sparks)"
 
 consider making the graphs more accurate by drilling down the tree
 to the base events at each slice borders:
@@ -63,6 +83,39 @@ but a side-effect is that the graphs grow higher visually
 or increase the accuracy by dividing increments not by the slice
 length (implicitly), but the length of the sum of tree node spans
 that cover the slice, similarly as in gnuplot graphs
+
+collect info about the evaluation time of each spark,
+probably via precise per-spark events and then deducing
+the indentity of sparks by comparing the precise timestamps
+
+do precise per-spark events, at least to do some performance testing
+to see if it's too expensive (<@dcoutts> I suspect that matching spark
+evaluation back to creation/conversion time will require spark ids
+and per-spark events); benchmark it with the raytrace benchmark
+from the parfib suite; run with no spark sampling, with spark sampling,
+and with full spark events
+
+perhaps we should change the spark event sampling to emit events
+every N sparks rather than at GC; but only if experiments (do more accurate
+sampling and compare the general look of the graphs)
+show that linear extrapolation of the GC data is not correct
+(large spark transitions happen in the long periods between GC
+and we don't know when exactly) (the 4K pool size guarantees that at least
+with large visible absolute spark transition, the invisible transitions
+can't be huge in proportion to the visible ones, so then linear extrapolaton
+is correct))
+
+integrate info about the time taken by sparks, via shades of green
+(a shade per pixel of vertical iine, indicating the average size
+of sparks represented by the pixel/line (started/converted there))
+or via scaling the creation/conversion graphs by the spark size
+(instead of the area being the number of sparks,
+it's proportional to the amount of work (ie eval time)
+of the sparks in the interval); dcoutts has got a patch to turn spark
+events on/off as an +RTS -l  flag
+
+test, in particular the quality of sampling, on the parfib suite
+
 
 
 Far future:
@@ -92,15 +145,14 @@ into account only the visible and smoothed part of the graphs
 [GUI] select a region and display it in a separate tab
 (e.g. next to the events tab) and/or show in the tab for that selected time
 period how many sparks of each kind in that time: summary statistics
-for points in time, or periods of time
+for points in time, or periods of time; make the height of the graph
+in the tab configurable/resizable with mouse, or just take the whole screen
 
 [GUI] scroll around the graph image via a small zoomed out window
 "The Information Mural: A Technique for Displaying
 and Navigating Large Information Spaces"
 
 [GUI] label coloured areas with a mouseover, according to what they represent
-
-look for some other parallel programs to test
 
 use adaptive interval, depending on the sample density at the viewed fragment
 
@@ -114,15 +166,25 @@ but too irregular/scarce to say more, and full thickness line,
 with percentiles means we have enough data or evenly distributed enough
 to say all
 
-perhaps we should change the spark event sampling to emit events
-every N sparks rather than at GC; but only if experiments (do more accurate
-sampling and compare the general look of the graphs)
-show that linear extrapolation of the GC data is not correct
-(large spark transitions happen in the long periods between GC
-and we don't know when exactly) (the 4K pool size guarantees that at least
-with large visible absolute spark transition, the invisible transitions
-can't be huge in proportion to the visible ones, so then linear extrapolaton
-is correct))
+have *configurable* colors, like in Eden
+
+plot creation rate curve over the fizzled+GCd+converted graph;
+then the area, perhaps negative ;<, between the two graphs
+is the rate of change of the remaining pool
+
+dynamic strategy labelling (lots of stuff has to be done elsewhere, first)
+
+Eden TV has good visualisation for messages between processes & nodes,
+(steal it, when we do more work on Cloud Haskell)
+
+user-generated events in eventlog: if implemented, visualize them
+
+show time corresponding to the eventlog buffer flushing,
+after the event for this introduced
+
+verify correctness of the input eventlog, when event state transition machines
+for events defined and implemented
+
 
 
 Unrelated threadscope bugs:
@@ -143,4 +205,4 @@ by moving the scrollbar handle to the right
 
 a few levels of zoom in and then zoom out sometimes results in only
 a right fragment of the timeline are shown, no indication in the scrollbar
-that scroll is possible, but scrolling indeed fixes the viewt
+that scroll is possible, but scrolling indeed fixes the view
