@@ -1,0 +1,131 @@
+From 1ce5cfae950f963bb2f7c1592aaa019e8bd46e3a Mon Sep 17 00:00:00 2001
+From: Mikolaj <mikolaj.konarski@gmail.com>
+Date: Fri, 8 Jul 2011 20:39:14 +0200
+Subject: [PATCH 6/7] add a new trace class for fine-grained spark event logging
+
+---
+ includes/rts/Flags.h |    1 +
+ rts/RtsFlags.c       |   17 ++++++++++++-----
+ rts/Trace.c          |    1 +
+ rts/Trace.h          |    7 +++++++
+ 4 files changed, 21 insertions(+), 5 deletions(-)
+
+diff --git a/includes/rts/Flags.h b/includes/rts/Flags.h
+index 4ed7aef..1e695ae 100644
+--- a/includes/rts/Flags.h
++++ b/includes/rts/Flags.h
+@@ -129,6 +129,7 @@ struct TRACE_FLAGS {
+     rtsBool timestamp;      /* show timestamp in stderr output */
+     rtsBool scheduler;      /* trace scheduler events */
+     rtsBool sparks;         /* trace spark events */
++    rtsBool sparks_fine;    /* trace spark events 100% accurately */
+ };
+ 
+ struct CONCURRENT_FLAGS {
+diff --git a/rts/RtsFlags.c b/rts/RtsFlags.c
+index a866df5..c5eac24 100644
+--- a/rts/RtsFlags.c
++++ b/rts/RtsFlags.c
+@@ -164,6 +164,7 @@ void initRtsFlagsDefaults(void)
+     RtsFlags.TraceFlags.timestamp     = rtsFalse;
+     RtsFlags.TraceFlags.scheduler     = rtsFalse;
+     RtsFlags.TraceFlags.sparks        = rtsFalse;
++    RtsFlags.TraceFlags.sparks_fine   = rtsFalse;
+ #endif
+ 
+     RtsFlags.MiscFlags.tickInterval	= 20;  /* In milliseconds */
+@@ -290,6 +291,7 @@ usage_text[] = {
+ "             where [flags] can contain:",
+ "                s    scheduler events",
+ "                p    par spark events",
++"                f    par spark events (fine-grained)",
+ #  ifdef DEBUG
+ "                t    add time stamps (only useful with -v)",
+ #  endif
+@@ -1441,15 +1443,15 @@ static void read_trace_flags(char *arg)
+      *   -l-a  Turn off all classes
+      *
+      * This lets users say things like:
+-     *   -la-p    "all but sparks"
+-     *   -l-ap    "only sparks"
++     *   -la-s    "all but scheduler events"
++     *   -l-as    "only scheduler events"
+      */
+ 
+     /* Start by turning on the default tracing flags.
+      *
+-     * Currently this is all the trace classes, but might not be in
+-     * future, for example we might default to slightly less verbose
+-     * scheduler or GC tracing.
++     * Currently this is all the trace classes, except fine-grained sparks,
++     * but might not be in future, for example we might default
++     * to slightly less verbose scheduler or GC tracing.
+      */
+     RtsFlags.TraceFlags.scheduler = rtsTrue;
+     RtsFlags.TraceFlags.sparks = rtsTrue;
+@@ -1464,6 +1466,7 @@ static void read_trace_flags(char *arg)
+         case 'a':
+             RtsFlags.TraceFlags.scheduler = enabled;
+             RtsFlags.TraceFlags.sparks = enabled;
++            RtsFlags.TraceFlags.sparks_fine = enabled;
+             enabled = rtsTrue;
+             break;
+ 
+@@ -1475,6 +1478,10 @@ static void read_trace_flags(char *arg)
+             RtsFlags.TraceFlags.sparks = enabled;
+             enabled = rtsTrue;
+             break;
++        case 'f':
++            RtsFlags.TraceFlags.sparks_fine = enabled;
++            enabled = rtsTrue;
++            break;
+         case 't':
+             RtsFlags.TraceFlags.timestamp = enabled;
+             enabled = rtsTrue;
+diff --git a/rts/Trace.c b/rts/Trace.c
+index f7cba84..ee961d8 100644
+--- a/rts/Trace.c
++++ b/rts/Trace.c
+@@ -48,6 +48,7 @@ int DEBUG_sparks;
+ // events
+ int TRACE_sched;
+ int TRACE_spark;
++int TRACE_spark_fine;
+ 
+ #ifdef THREADED_RTS
+ static Mutex trace_utx;
+diff --git a/rts/Trace.h b/rts/Trace.h
+index 5887e72..ad62f2b 100644
+--- a/rts/Trace.h
++++ b/rts/Trace.h
+@@ -63,6 +63,7 @@ extern int DEBUG_sparks;
+ // events
+ extern int TRACE_sched;
+ extern int TRACE_spark;
++extern int TRACE_spark_fine;
+ 
+ // -----------------------------------------------------------------------------
+ // Posting events
+@@ -99,6 +100,11 @@ void traceEnd (void);
+         traceSchedEvent_(cap, tag, tso, other, 0); \
+     }
+ 
++#define traceSparkFineEvent(cap, tag, tso, other)   \
++    if (RTS_UNLIKELY(TRACE_spark_fine)) {            \
++        traceSchedEvent_(cap, tag, tso, other, 0); \
++    }
++
+ void traceSchedEvent_ (Capability *cap, EventTypeNum tag,
+                        StgTSO *tso, StgWord info1, StgWord info2);
+ 
+@@ -199,6 +205,7 @@ void traceSparkCounters_ (Capability *cap,
+ #define traceSchedEvent(cap, tag, tso, other) /* nothing */
+ #define traceSchedEvent2(cap, tag, tso, other, info) /* nothing */
+ #define traceSparkEvent(cap, tag, tso, other) /* nothing */
++#define traceSparkFineEvent(cap, tag, tso, other) /* nothing */
+ #define traceEvent(cap, tag) /* nothing */
+ #define traceCap(class, cap, msg, ...) /* nothing */
+ #define trace(class, msg, ...) /* nothing */
+-- 
+1.7.4.1
+

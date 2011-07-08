@@ -1,7 +1,7 @@
-From c93fdc2529e18b4eca04e1bf94640a115be49893 Mon Sep 17 00:00:00 2001
+From 61043d8c1a27a24459306ab00c77fa526fa83608 Mon Sep 17 00:00:00 2001
 From: Mikolaj <mikolaj.konarski@gmail.com>
 Date: Fri, 8 Jul 2011 14:04:18 +0200
-Subject: [PATCH 3/3] fix whitespace (mostly trailing and tabs) in sparklog-related files
+Subject: [PATCH 3/7] fix whitespace (mostly trailing and tabs) in sparklog-related files
 
 ---
  includes/rts/EventLogFormat.h |    8 +-
@@ -11,11 +11,13 @@ Subject: [PATCH 3/3] fix whitespace (mostly trailing and tabs) in sparklog-relat
  rts/RtsFlags.c                |   48 +++++-----
  rts/Schedule.c                |  230 ++++++++++++++++++++--------------------
  rts/Schedule.h                |    9 +-
+ rts/Sparks.c                  |   24 ++--
+ rts/Sparks.h                  |    8 +-
  rts/Trace.c                   |   28 +++---
  rts/Trace.h                   |   40 ++++----
  rts/eventlog/EventLog.c       |   48 +++++-----
  rts/eventlog/EventLog.h       |   10 +-
- 11 files changed, 237 insertions(+), 238 deletions(-)
+ 13 files changed, 253 insertions(+), 254 deletions(-)
 
 diff --git a/includes/rts/EventLogFormat.h b/includes/rts/EventLogFormat.h
 index 1ea8d67..e4c6c85 100644
@@ -1392,6 +1394,131 @@ index 549f555..b1141cd 100644
  
  #endif /* SCHEDULE_H */
 -
+diff --git a/rts/Sparks.c b/rts/Sparks.c
+index 6ce2e68..2ff15dd 100644
+--- a/rts/Sparks.c
++++ b/rts/Sparks.c
+@@ -30,7 +30,7 @@ freeSparkPool (SparkPool *pool)
+ }
+ 
+ /* -----------------------------------------------------------------------------
+- * 
++ *
+  * Turn a spark into a real thread
+  *
+  * -------------------------------------------------------------------------- */
+@@ -40,7 +40,7 @@ createSparkThread (Capability *cap)
+ {
+     StgTSO *tso;
+ 
+-    tso = createIOThread (cap, RtsFlags.GcFlags.initialStkSize, 
++    tso = createIOThread (cap, RtsFlags.GcFlags.initialStkSize,
+                           (StgClosure *)runSparks_closure);
+ 
+     traceEventCreateSparkThread(cap, tso->id);
+@@ -82,18 +82,18 @@ newSpark (StgRegTable *reg, StgClosure *p)
+ 
+ void
+ pruneSparkQueue (Capability *cap)
+-{ 
++{
+     SparkPool *pool;
+     StgClosurePtr spark, tmp, *elements;
+     nat n, pruned_sparks; // stats only
+     StgWord botInd,oldBotInd,currInd; // indices in array (always < size)
+     const StgInfoTable *info;
+-    
++
+     n = 0;
+     pruned_sparks = 0;
+-    
++
+     pool = cap->sparks;
+-    
++
+     // it is possible that top > bottom, indicating an empty pool.  We
+     // fix that here; this is only necessary because the loop below
+     // assumes it.
+@@ -232,11 +232,11 @@ pruneSparkQueue (Capability *cap)
+     pool->top = oldBotInd; // where we started writing
+     pool->topBound = pool->top;
+ 
+-    pool->bottom = (oldBotInd <= botInd) ? botInd : (botInd + pool->size); 
++    pool->bottom = (oldBotInd <= botInd) ? botInd : (botInd + pool->size);
+     // first free place we did not use (corrected by wraparound)
+ 
+     debugTrace(DEBUG_sparks, "pruned %d sparks", pruned_sparks);
+-    
++
+     debugTrace(DEBUG_sparks,
+                "new spark queue len=%ld; (hd=%ld; tl=%ld)",
+                sparkPoolSize(pool), pool->bottom, pool->top);
+@@ -252,7 +252,7 @@ traverseSparkQueue (evac_fn evac, void *user, Capability *cap)
+     StgClosure **sparkp;
+     SparkPool *pool;
+     StgWord top,bottom, modMask;
+-    
++
+     pool = cap->sparks;
+ 
+     ASSERT_WSDEQUE_INVARIANTS(pool);
+@@ -267,7 +267,7 @@ traverseSparkQueue (evac_fn evac, void *user, Capability *cap)
+      * In GHC-6.10, evac takes an additional 1st argument to hold a
+      * GC-specific register, see rts/sm/GC.c::mark_root()
+      */
+-      evac( user , sparkp + (top & modMask) ); 
++      evac( user , sparkp + (top & modMask) );
+       top++;
+     }
+ 
+@@ -281,12 +281,12 @@ traverseSparkQueue (evac_fn evac, void *user, Capability *cap)
+  * capabilities) and its size. Accesses all spark pools and equally
+  * distributes the sparks among them.
+  *
+- * Could be called after GC, before Cap. release, from scheduler. 
++ * Could be called after GC, before Cap. release, from scheduler.
+  * -------------------------------------------------------------------------- */
+ void balanceSparkPoolsCaps(nat n_caps, Capability caps[])
+    GNUC3_ATTRIBUTE(__noreturn__);
+ 
+-void balanceSparkPoolsCaps(nat n_caps STG_UNUSED, 
++void balanceSparkPoolsCaps(nat n_caps STG_UNUSED,
+                            Capability caps[] STG_UNUSED) {
+   barf("not implemented");
+ }
+diff --git a/rts/Sparks.h b/rts/Sparks.h
+index e381dd5..a9c30fd 100644
+--- a/rts/Sparks.h
++++ b/rts/Sparks.h
+@@ -3,7 +3,7 @@
+  * (c) The GHC Team, 2000-2009
+  *
+  * Sparking support for GRAN, PAR and THREADED_RTS versions of the RTS.
+- * 
++ *
+  * ---------------------------------------------------------------------------*/
+ 
+ #ifndef SPARKS_H
+@@ -65,8 +65,8 @@ INLINE_HEADER rtsBool looksEmpty(SparkPool* deque)
+     return looksEmptyWSDeque(deque);
+ }
+ 
+-INLINE_HEADER long sparkPoolSize (SparkPool *pool) 
+-{ 
++INLINE_HEADER long sparkPoolSize (SparkPool *pool)
++{
+     return dequeElements(pool);
+ }
+ 
+@@ -76,7 +76,7 @@ INLINE_HEADER void discardSparks (SparkPool *pool)
+ }
+ 
+ /* ----------------------------------------------------------------------------
+- * 
++ *
+  * tryStealSpark: try to steal a spark from a Capability.
+  *
+  * Returns either:
 diff --git a/rts/Trace.c b/rts/Trace.c
 index 7d856d6..f7cba84 100644
 --- a/rts/Trace.c

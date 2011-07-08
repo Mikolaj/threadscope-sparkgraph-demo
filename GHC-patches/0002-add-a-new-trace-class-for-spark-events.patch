@@ -1,7 +1,7 @@
 From 362229d84625cbef5d2a455b19227a783b2f332e Mon Sep 17 00:00:00 2001
 From: Duncan Coutts <duncan@well-typed.com>
 Date: Fri, 8 Jul 2011 17:36:16 +0200
-Subject: [PATCH 2/3] add a new trace class for spark events
+Subject: [PATCH 2/7] add a new trace class for spark events
 
 ---
  includes/rts/Flags.h |    2 +-

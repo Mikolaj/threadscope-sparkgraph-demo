@@ -1,0 +1,45 @@
+From 324658e25ddc6fcd4830a764e463d3361deb3ddb Mon Sep 17 00:00:00 2001
+From: Mikolaj <mikolaj.konarski@gmail.com>
+Date: Fri, 8 Jul 2011 19:07:36 +0200
+Subject: [PATCH 5/7] disable spark run, steal and create spark thread events
+
+They will be re-enabled when they are properly included in an event class
+--- accurate or sampled spark event class, or both.
+---
+ rts/Trace.h |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/rts/Trace.h b/rts/Trace.h
+index 18542d4..5887e72 100644
+--- a/rts/Trace.h
++++ b/rts/Trace.h
+@@ -409,7 +409,7 @@ INLINE_HEADER void traceEventRequestParGc(Capability *cap STG_UNUSED)
+ INLINE_HEADER void traceEventRunSpark(Capability *cap STG_UNUSED,
+                                       StgTSO     *tso STG_UNUSED)
+ {
+-    traceSparkEvent(cap, EVENT_RUN_SPARK, tso, 0);
++//    traceSparkEvent(cap, EVENT_RUN_SPARK, tso, 0);
+     dtraceRunSpark((EventCapNo)cap->no, (EventThreadID)tso->id);
+ }
+ 
+@@ -417,7 +417,7 @@ INLINE_HEADER void traceEventStealSpark(Capability *cap        STG_UNUSED,
+                                         StgTSO     *tso        STG_UNUSED,
+                                         nat         victim_cap STG_UNUSED)
+ {
+-    traceSparkEvent(cap, EVENT_STEAL_SPARK, tso, victim_cap);
++//    traceSparkEvent(cap, EVENT_STEAL_SPARK, tso, victim_cap);
+     dtraceStealSpark((EventCapNo)cap->no, (EventThreadID)tso->id,
+                      (EventCapNo)victim_cap);
+ }
+@@ -425,7 +425,7 @@ INLINE_HEADER void traceEventStealSpark(Capability *cap        STG_UNUSED,
+ INLINE_HEADER void traceEventCreateSparkThread(Capability  *cap      STG_UNUSED,
+                                                StgThreadID spark_tid STG_UNUSED)
+ {
+-    traceSparkEvent(cap, EVENT_CREATE_SPARK_THREAD, 0, spark_tid);
++//    traceSparkEvent(cap, EVENT_CREATE_SPARK_THREAD, 0, spark_tid);
+     dtraceCreateSparkThread((EventCapNo)cap->no, (EventThreadID)spark_tid);
+ }
+ 
+-- 
+1.7.4.1
+
