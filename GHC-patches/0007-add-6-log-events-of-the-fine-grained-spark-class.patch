@@ -1,4 +1,4 @@
-From 1d162f3db18e6ebe8444a53c3fa9dbdf0b0c52e9 Mon Sep 17 00:00:00 2001
+From 444e1cf9c095a61de145a689ee516b291391823a Mon Sep 17 00:00:00 2001
 From: Mikolaj <mikolaj.konarski@gmail.com>
 Date: Fri, 8 Jul 2011 21:56:44 +0200
 Subject: [PATCH 7/7] add 6 log events of the fine-grained spark class
@@ -7,9 +7,10 @@ Subject: [PATCH 7/7] add 6 log events of the fine-grained spark class
  includes/rts/EventLogFormat.h |    8 +++++++-
  rts/Capability.c              |    4 ++++
  rts/Sparks.c                  |   11 ++++++++++-
+ rts/Trace.c                   |    3 +++
  rts/Trace.h                   |   37 +++++++++++++++++++++++++++++++++----
  rts/eventlog/EventLog.c       |   14 +++++++++++++-
- 5 files changed, 67 insertions(+), 7 deletions(-)
+ 6 files changed, 70 insertions(+), 7 deletions(-)
 
 diff --git a/includes/rts/EventLogFormat.h b/includes/rts/EventLogFormat.h
 index e4c6c85..c0d32db 100644
@@ -134,6 +135,20 @@ index 2ff15dd..0769b58 100644
                }
            }
        }
+diff --git a/rts/Trace.c b/rts/Trace.c
+index ee961d8..e2fa4c8 100644
+--- a/rts/Trace.c
++++ b/rts/Trace.c
+@@ -97,6 +97,9 @@ void initTracing (void)
+         RtsFlags.TraceFlags.sparks ||
+         RtsFlags.DebugFlags.sparks;
+ 
++    TRACE_spark_fine =
++        RtsFlags.TraceFlags.sparks_fine;
++
+     eventlog_enabled = RtsFlags.TraceFlags.tracing == TRACE_EVENTLOG;
+ 
+     /* Note: we can have TRACE_sched or TRACE_spark turned on even when
 diff --git a/rts/Trace.h b/rts/Trace.h
 index ad62f2b..7b1efa3 100644
 --- a/rts/Trace.h
