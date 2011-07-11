@@ -1,0 +1,85 @@
+Two-core machine, Intel P6100 @2.00GHz, no hyperthreading, 8G RAM.
+
+Both programs take much longer with -N2 than -N1, probably because
+of massive spark stealing (probably no spark is run on the same
+HEC that created it --- they exchange roles, but one always creates sparks,
+the other converts them). Testing with more cores may give better results.
+
+Disabled events for all tests: spark steal, run and create spark thread.
+
+s - scheduler events
+p - old spark events (spark counters only)
+f - fine-grained spark events (individual event for incrementing
+every counter field)
+
+
+Representative results for parlist 9000000:
+
+time ./parlist +RTS -N2 -l-asp
+real	0m14.364s
+user	0m17.530s
+sys	0m2.590s
+
+show-ghc-events parlist.eventlog | wc -l
+477592
+
+Stats at the end of the run:
+
+cap 0: spark stats: 6621158 created, 3822805 converted, 0 remaining (0 overflowed, 0 dud, 667932 GC'd, 78206 fizzled)
+cap 1: spark stats: 2378843 created, 4277891 converted, 0 remaining (0 overflowed, 0 dud, 138728 GC'd, 14439 fizzled)
+
+Time for -l-as and -l-a the same as above, within the observed variance.
+
+time ./parlist +RTS -N2 -l-asf
+real	0m17.442s
+user	0m18.330s
+sys	0m6.410s
+
+time show-ghc-events parlist.eventlog | wc -l
+18454599
+real	2m2.676s
+user	2m1.820s
+sys	0m3.360s
+
+
+Representative results for ray 1000:
+
+time ./ray 1000 +RTS -N2 -l-a > /dev/null
+real	0m14.962s
+user	0m14.710s
+sys	0m3.060s
+
+show-ghc-events Main.eventlog | wc -l
+54
+
+time ./ray 1000 +RTS -N2 -l-as > /dev/null
+real	0m15.348s
+user	0m15.260s
+sys	0m3.150s
+
+show-ghc-events ray.eventlog | wc -l
+797742
+
+time ./ray 1000 +RTS -N2 -l-asp > /dev/null
+real	0m15.646s
+user	0m15.040s
+sys	0m3.620s
+
+show-ghc-events ray.eventlog | wc -l
+848629
+
+Stats at the end of the run:
+
+cap 0: spark stats: 638701 created, 334586 converted, 0 remaining (0 overflowed, 0 dud, 63754 GC'd, 20497 fizzled)
+cap 1: spark stats: 361299 created, 497567 converted, 0 remaining (0 overflowed, 0 dud, 72241 GC'd, 11355 fizzled)
+
+time ./ray 1000 +RTS -N2 -l-asf > /dev/null
+real	0m16.084s
+user	0m15.680s
+sys	0m3.450s
+
+time show-ghc-events ray.eventlog | wc -l
+2792413
+real	0m13.602s
+user	0m13.510s
+sys	0m0.490s
