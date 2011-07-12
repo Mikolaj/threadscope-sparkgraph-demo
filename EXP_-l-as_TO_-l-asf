@@ -1,0 +1,637 @@
+NoFib Results
+
+--------------------------------------------------------------------------------
+        Program           Size    Allocs   Runtime   Elapsed  TotalMem
+--------------------------------------------------------------------------------
+   blackscholes          +0.0%     -0.0%     -1.1%     -1.1%     +0.0%
+          coins          +0.0%     +0.0%     +1.9%     +2.0%     +4.7%
+           gray          +0.0%     -0.0%     -2.8%     -2.1%     -1.4%
+         mandel          +0.0%     -0.0%     +1.0%     +2.0%     -0.3%
+        matmult          +0.0%     +1.4%     -5.3%     -4.4%     +4.4%
+        minimax          +0.0%     -0.0%     -0.9%     -0.7%     +0.0%
+          nbody          +0.0%     -0.0%     -5.5%    -13.9%     +0.0%
+         parfib          +0.0%     -1.0%    +48.9%    +49.0%     +0.0%
+        partree          +0.0%     +0.0%     -1.0%     -2.2%     -1.7%
+           prsa          +0.0%     -0.0%     -0.9%     -0.8%     +0.0%
+         queens          +0.0%     +0.0%     +1.3%     +2.6%     +4.8%
+            ray          +0.0%     +0.8%     +4.3%     +2.9%     +0.0%
+       sumeuler          +0.0%     +0.0%     +0.4%     +0.3%     +0.0%
+      transclos          +0.0%     +0.0%     -0.4%     -0.5%     +0.0%
+--------------------------------------------------------------------------------
+            Min          +0.0%     -1.0%     -5.5%    -13.9%     -1.7%
+            Max          +0.0%     +1.4%    +48.9%    +49.0%     +4.8%
+ Geometric Mean          +0.0%     +0.1%     +2.2%     +1.6%     +0.7%
+
+Binary Sizes
+
+-------------------------------------------------------------------------------
+        Program       nofib-log-l-as nofib-log-l-asf
+-------------------------------------------------------------------------------
+   blackscholes              4064559           +0.0%
+          coins              3657887           +0.0%
+           gray              4941199           +0.0%
+         mandel              4067279           +0.0%
+        matmult              4230047           +0.0%
+        minimax              4366063           +0.0%
+          nbody              4143327           +0.0%
+         parfib              3488607           +0.0%
+        partree              3662223           +0.0%
+           prsa              3657887           +0.0%
+         queens              4206655           +0.0%
+            ray              3672255           +0.0%
+       sumeuler              3687551           +0.0%
+      transclos              4237743           +0.0%
+        -1 s.d.                -----           +0.0%
+        +1 s.d.                -----           +0.0%
+        Average                -----           +0.0%
+
+Allocations
+
+-------------------------------------------------------------------------------
+        Program       nofib-log-l-as nofib-log-l-asf
+-------------------------------------------------------------------------------
+   blackscholes           3070998900           -0.0%
+          coins           5252529374           +0.0%
+           gray           3680022014           -0.0%
+         mandel          10358772627           -0.0%
+        matmult             93631185           +1.4%
+        minimax          14379211334           -0.0%
+          nbody           4968259491           -0.0%
+         parfib            369365139           -1.0%
+        partree           4224591297           +0.0%
+           prsa           4484591968           -0.0%
+         queens           3595624001           +0.0%
+            ray          17781972289           +0.8%
+       sumeuler           5215936024           +0.0%
+      transclos           8997357899           +0.0%
+        -1 s.d.                -----           -0.4%
+        +1 s.d.                -----           +0.6%
+        Average                -----           +0.1%
+
+Run Time
+
+-------------------------------------------------------------------------------
+        Program       nofib-log-l-as nofib-log-l-asf
+-------------------------------------------------------------------------------
+   blackscholes                18.59           -1.1%
+          coins                 4.82           +1.9%
+           gray                 3.88           -2.8%
+         mandel                 9.14           +1.0%
+        matmult                 9.76           -5.3%
+        minimax                12.10           -0.9%
+          nbody                 4.52           -5.5%
+         parfib                 8.77          +48.9%
+        partree                 5.57           -1.0%
+           prsa                 8.90           -0.9%
+         queens                 5.07           +1.3%
+            ray                19.06           +4.3%
+       sumeuler                 6.77           +0.4%
+      transclos                 7.84           -0.4%
+        -1 s.d.                -----           -8.2%
+        +1 s.d.                -----          +13.8%
+        Average                -----           +2.2%
+
+Elapsed Time
+
+-------------------------------------------------------------------------------
+        Program       nofib-log-l-as nofib-log-l-asf
+-------------------------------------------------------------------------------
+   blackscholes                 9.57           -1.1%
+          coins                 2.53           +2.0%
+           gray                 2.05           -2.1%
+         mandel                 4.84           +2.0%
+        matmult                 5.10           -4.4%
+        minimax                 6.22           -0.7%
+          nbody                 2.62          -13.9%
+         parfib                 4.50          +49.0%
+        partree                 2.95           -2.2%
+           prsa                 4.60           -0.8%
+         queens                 2.62           +2.6%
+            ray                16.03           +2.9%
+       sumeuler                 3.54           +0.3%
+      transclos                 4.16           -0.5%
+        -1 s.d.                -----           -9.4%
+        +1 s.d.                -----          +13.9%
+        Average                -----           +1.6%
+
+Mutator Time
+
+-------------------------------------------------------------------------------
+        Program       nofib-log-l-as nofib-log-l-asf
+-------------------------------------------------------------------------------
+   blackscholes                12.75           -0.1%
+          coins                 1.74           -1.1%
+           gray                 2.23           +1.3%
+         mandel                 4.96           +0.5%
+        matmult                 9.45           -5.6%
+        minimax                 5.01           -0.7%
+          nbody                 3.01          -11.9%
+         parfib                 7.19          +20.6%
+        partree                 1.37           -0.7%
+           prsa                 5.51           +2.5%
+         queens                 3.33           +2.7%
+            ray                15.44           +5.3%
+       sumeuler                 3.81           -0.5%
+      transclos                 5.12           -1.8%
+        -1 s.d.                -----           -5.8%
+        +1 s.d.                -----           +7.3%
+        Average                -----           +0.5%
+
+Mutator Elapsed Time
+
+-------------------------------------------------------------------------------
+        Program       nofib-log-l-as nofib-log-l-asf
+-------------------------------------------------------------------------------
+   blackscholes                 9.36           -1.2%
+          coins                 0.79           +1.8%
+           gray                 1.62           -3.1%
+         mandel                 4.39           +2.2%
+        matmult                 4.99           -4.7%
+        minimax                 4.23           -0.6%
+          nbody                 2.50          -13.7%
+         parfib                 4.44          +17.2%
+        partree                 1.16           -1.0%
+           prsa                 4.24           -0.6%
+         queens                 2.48           +2.6%
+            ray                13.28           +3.3%
+       sumeuler                 3.43           -0.1%
+      transclos                 3.95           -0.8%
+        -1 s.d.                -----           -6.1%
+        +1 s.d.                -----           +6.3%
+        Average                -----           -0.1%
+
+GC Time
+
+-------------------------------------------------------------------------------
+        Program       nofib-log-l-as nofib-log-l-asf
+-------------------------------------------------------------------------------
+   blackscholes                 5.83           -3.4%
+          coins                 3.08           +3.6%
+           gray                 1.65           -8.5%
+         mandel                 4.18           +1.6%
+        matmult                 0.31           +2.6%
+        minimax                 7.09           -1.0%
+          nbody                 1.51           +7.3%
+         parfib                 1.58         +175.5%
+        partree                 4.21           -1.1%
+           prsa                 3.39           -6.5%
+         queens                 1.74           -1.5%
+            ray                 3.61           -0.1%
+       sumeuler                 2.96           +1.6%
+      transclos                 2.72           +2.2%
+        -1 s.d.                -----          -17.8%
+        +1 s.d.                -----          +39.7%
+        Average                -----           +7.2%
+
+GC Elapsed Time
+
+-------------------------------------------------------------------------------
+        Program       nofib-log-l-as nofib-log-l-asf
+-------------------------------------------------------------------------------
+   blackscholes                 0.21           +2.9%
+          coins                 1.74           +2.1%
+           gray                 0.43           +1.4%
+         mandel                 0.45           +0.4%
+        matmult                 0.11            0.12
+        minimax                 2.00           -1.1%
+          nbody                 0.12            0.10
+         parfib                 0.06            1.47
+        partree                 1.78           -3.0%
+           prsa                 0.36           -3.3%
+         queens                 0.14            0.15
+            ray                 2.74           +0.9%
+       sumeuler                 0.11            0.12
+      transclos                 0.21           +3.7%
+        -1 s.d.                -----           -1.9%
+        +1 s.d.                -----           +2.8%
+        Average                -----           +0.4%
+
+GC(0) Count
+
+-------------------------------------------------------------------------------
+        Program       nofib-log-l-as nofib-log-l-asf
+-------------------------------------------------------------------------------
+   blackscholes                 2958           -0.3%
+          coins                 5115           +0.2%
+           gray                 3770           +0.0%
+         mandel                10964           +0.4%
+        matmult                  105           -1.9%
+        minimax                13102           -0.3%
+          nbody                 5125           -5.2%
+         parfib                  356           -0.3%
+        partree                 3829           -0.6%
+           prsa                 4207           -0.2%
+         queens                 3476           +0.8%
+            ray                25560           -0.0%
+       sumeuler                 5266           +0.0%
+      transclos                 8921           -0.4%
+        -1 s.d.                -----           -2.0%
+        +1 s.d.                -----           +0.9%
+        Average                -----           -0.6%
+
+GC(0) Time
+
+-------------------------------------------------------------------------------
+        Program       nofib-log-l-as nofib-log-l-asf
+-------------------------------------------------------------------------------
+   blackscholes                 5.80           -3.5%
+          coins                 1.54           +2.5%
+           gray                 1.41          -10.2%
+         mandel                 3.99           +1.5%
+        matmult                 0.22           +5.5%
+        minimax                 6.43           -1.0%
+          nbody                 1.50           +7.5%
+         parfib                 1.57         +175.6%
+        partree                 2.72           -1.3%
+           prsa                 3.18           -6.4%
+         queens                 1.68           -2.1%
+            ray                 3.37           -0.5%
+       sumeuler                 2.96           +1.5%
+      transclos                 2.69           +2.1%
+        -1 s.d.                -----          -17.9%
+        +1 s.d.                -----          +39.7%
+        Average                -----           +7.1%
+
+GC(0) Elapsed Time
+
+-------------------------------------------------------------------------------
+        Program       nofib-log-l-as nofib-log-l-asf
+-------------------------------------------------------------------------------
+   blackscholes                 0.19            0.19
+          coins                 0.95           -2.3%
+           gray                 0.32           -0.6%
+         mandel                 0.35           -0.0%
+        matmult                 0.06            0.06
+        minimax                 1.87           -1.2%
+          nbody                 0.12            0.10
+         parfib                 0.06            1.46
+        partree                 1.13           -3.7%
+           prsa                 0.30           -3.3%
+         queens                 0.12            0.11
+            ray                 2.57           +0.7%
+       sumeuler                 0.11            0.12
+      transclos                 0.21           +2.9%
+        -1 s.d.                -----           -3.0%
+        +1 s.d.                -----           +1.1%
+        Average                -----           -1.0%
+
+GC(1) Count
+
+-------------------------------------------------------------------------------
+        Program       nofib-log-l-as nofib-log-l-asf
+-------------------------------------------------------------------------------
+   blackscholes                    8          -12.5%
+          coins                   10           +0.0%
+           gray                  106           +0.0%
+         mandel                    7           +0.0%
+        matmult                    6           +0.0%
+        minimax                  942           -0.1%
+          nbody                    2           +0.0%
+         parfib                    1           +0.0%
+        partree                  408           +2.5%
+           prsa                  143           -4.9%
+         queens                   16           +0.0%
+            ray                  495           -0.6%
+       sumeuler                    2           +0.0%
+      transclos                   38           +0.0%
+        -1 s.d.                -----           -4.8%
+        +1 s.d.                -----           +2.5%
+        Average                -----           -1.2%
+
+GC(1) Time
+
+-------------------------------------------------------------------------------
+        Program       nofib-log-l-as nofib-log-l-asf
+-------------------------------------------------------------------------------
+   blackscholes                 0.04            0.04
+          coins                 1.54           +4.5%
+           gray                 0.25           +2.4%
+         mandel                 0.19            0.20
+        matmult                 0.09            0.09
+        minimax                 0.65           +0.3%
+          nbody                 0.00            0.00
+         parfib                 0.00            0.01
+        partree                 1.49           -0.8%
+           prsa                 0.21           -7.6%
+         queens                 0.06            0.07
+            ray                 0.24           +4.1%
+       sumeuler                 0.00            0.01
+      transclos                 0.03            0.04
+        -1 s.d.                -----           -3.7%
+        +1 s.d.                -----           +4.7%
+        Average                -----           +0.4%
+
+GC(1) Elapsed Time
+
+-------------------------------------------------------------------------------
+        Program       nofib-log-l-as nofib-log-l-asf
+-------------------------------------------------------------------------------
+   blackscholes                 0.01            0.02
+          coins                 0.80           +6.8%
+           gray                 0.11            0.12
+         mandel                 0.10            0.11
+        matmult                 0.05            0.05
+        minimax                 0.13            0.13
+          nbody                 0.00            0.00
+         parfib                 0.00            0.00
+        partree                 0.65           -1.9%
+           prsa                 0.05            0.06
+         queens                 0.03            0.03
+            ray                 0.17            0.18
+       sumeuler                 0.00            0.00
+      transclos                 0.01            0.01
+        -1 s.d.                -----           -1.9%
+        +1 s.d.                -----           +6.8%
+        Average                -----           +2.4%
+
+GC Work
+
+-------------------------------------------------------------------------------
+        Program       nofib-log-l-as nofib-log-l-asf
+-------------------------------------------------------------------------------
+   blackscholes              8697281           -1.9%
+          coins           1464670192           +2.1%
+           gray            192086684           +0.3%
+         mandel            105795100           -0.5%
+        matmult             51724417           -1.2%
+        minimax            941421899           -0.1%
+          nbody              2921652           +0.2%
+         parfib               279700           -0.2%
+        partree           1079294276           -0.2%
+           prsa            104817193           -0.8%
+         queens             46192948           +0.2%
+            ray            366471744           -0.1%
+       sumeuler              3116883           -9.1%
+      transclos             29312792           -0.1%
+        -1 s.d.                -----           -3.4%
+        +1 s.d.                -----           +1.7%
+        Average                -----           -0.8%
+
+GC work balance
+
+-------------------------------------------------------------------------------
+        Program       nofib-log-l-as nofib-log-l-asf
+-------------------------------------------------------------------------------
+   blackscholes                 1.21           -0.2%
+          coins                 1.64           +0.4%
+           gray                 1.32           -0.2%
+         mandel                 1.44           -1.4%
+        matmult                 1.62           +0.5%
+        minimax                 1.82           +0.3%
+          nbody                 1.29           +1.1%
+         parfib                 1.81           -1.3%
+        partree                 1.60           +0.0%
+           prsa                 1.29           +0.5%
+         queens                 1.57           +0.4%
+            ray                 1.14           +0.7%
+       sumeuler                 1.30           +2.2%
+      transclos                 1.27           -0.2%
+        -1 s.d.                -----           -0.7%
+        +1 s.d.                -----           +1.1%
+        Average                -----           +0.2%
+
+Instructions
+
+-------------------------------------------------------------------------------
+        Program       nofib-log-l-as nofib-log-l-asf
+-------------------------------------------------------------------------------
+   blackscholes          (no result)     (no result)
+          coins          (no result)     (no result)
+           gray          (no result)     (no result)
+         mandel          (no result)     (no result)
+        matmult          (no result)     (no result)
+        minimax          (no result)     (no result)
+          nbody          (no result)     (no result)
+         parfib          (no result)     (no result)
+        partree          (no result)     (no result)
+           prsa          (no result)     (no result)
+         queens          (no result)     (no result)
+            ray          (no result)     (no result)
+       sumeuler          (no result)     (no result)
+      transclos          (no result)     (no result)
+        -1 s.d.                -----           -----
+        +1 s.d.                -----           -----
+        Average                -----           -----
+
+Memory Reads
+
+-------------------------------------------------------------------------------
+        Program       nofib-log-l-as nofib-log-l-asf
+-------------------------------------------------------------------------------
+   blackscholes          (no result)     (no result)
+          coins          (no result)     (no result)
+           gray          (no result)     (no result)
+         mandel          (no result)     (no result)
+        matmult          (no result)     (no result)
+        minimax          (no result)     (no result)
+          nbody          (no result)     (no result)
+         parfib          (no result)     (no result)
+        partree          (no result)     (no result)
+           prsa          (no result)     (no result)
+         queens          (no result)     (no result)
+            ray          (no result)     (no result)
+       sumeuler          (no result)     (no result)
+      transclos          (no result)     (no result)
+        -1 s.d.                -----           -----
+        +1 s.d.                -----           -----
+        Average                -----           -----
+
+Memory Writes
+
+-------------------------------------------------------------------------------
+        Program       nofib-log-l-as nofib-log-l-asf
+-------------------------------------------------------------------------------
+   blackscholes          (no result)     (no result)
+          coins          (no result)     (no result)
+           gray          (no result)     (no result)
+         mandel          (no result)     (no result)
+        matmult          (no result)     (no result)
+        minimax          (no result)     (no result)
+          nbody          (no result)     (no result)
+         parfib          (no result)     (no result)
+        partree          (no result)     (no result)
+           prsa          (no result)     (no result)
+         queens          (no result)     (no result)
+            ray          (no result)     (no result)
+       sumeuler          (no result)     (no result)
+      transclos          (no result)     (no result)
+        -1 s.d.                -----           -----
+        +1 s.d.                -----           -----
+        Average                -----           -----
+
+Cache Misses
+
+-------------------------------------------------------------------------------
+        Program       nofib-log-l-as nofib-log-l-asf
+-------------------------------------------------------------------------------
+   blackscholes          (no result)     (no result)
+          coins          (no result)     (no result)
+           gray          (no result)     (no result)
+         mandel          (no result)     (no result)
+        matmult          (no result)     (no result)
+        minimax          (no result)     (no result)
+          nbody          (no result)     (no result)
+         parfib          (no result)     (no result)
+        partree          (no result)     (no result)
+           prsa          (no result)     (no result)
+         queens          (no result)     (no result)
+            ray          (no result)     (no result)
+       sumeuler          (no result)     (no result)
+      transclos          (no result)     (no result)
+        -1 s.d.                -----           -----
+        +1 s.d.                -----           -----
+        Average                -----           -----
+
+Total Memory in use
+
+-------------------------------------------------------------------------------
+        Program       nofib-log-l-as nofib-log-l-asf
+-------------------------------------------------------------------------------
+   blackscholes             68157440           +0.0%
+          coins            665636044           +4.7%
+           gray             14680064           -1.4%
+         mandel             63753420           -0.3%
+        matmult             28730982           +4.4%
+        minimax              3145728           +0.0%
+          nbody              3145728           +0.0%
+         parfib              2097152           +0.0%
+        partree             12163481           -1.7%
+           prsa              3145728           +0.0%
+         queens              8808038           +4.8%
+            ray              3145728           +0.0%
+       sumeuler              3145728           +0.0%
+      transclos              3145728           +0.0%
+        -1 s.d.                -----           -1.3%
+        +1 s.d.                -----           +2.8%
+        Average                -----           +0.7%
+Module Sizes
+
+-------------------------------------------------------------------------------
+        Program       nofib-log-l-as nofib-log-l-asf
+-------------------------------------------------------------------------------
+
+blackscholes
+(no modules compiled)
+
+
+coins
+(no modules compiled)
+
+
+gray
+(no modules compiled)
+
+
+mandel
+(no modules compiled)
+
+
+matmult
+(no modules compiled)
+
+
+minimax
+(no modules compiled)
+
+
+nbody
+(no modules compiled)
+
+
+parfib
+(no modules compiled)
+
+
+partree
+(no modules compiled)
+
+
+prsa
+(no modules compiled)
+
+
+queens
+(no modules compiled)
+
+
+ray
+(no modules compiled)
+
+
+sumeuler
+(no modules compiled)
+
+
+transclos
+(no modules compiled)
+
+
+        -1 s.d.     
+        +1 s.d.     
+        Average     
+
+Compile Times
+
+-------------------------------------------------------------------------------
+        Program       nofib-log-l-as nofib-log-l-asf
+-------------------------------------------------------------------------------
+
+blackscholes
+(no modules compiled)
+
+
+coins
+(no modules compiled)
+
+
+gray
+(no modules compiled)
+
+
+mandel
+(no modules compiled)
+
+
+matmult
+(no modules compiled)
+
+
+minimax
+(no modules compiled)
+
+
+nbody
+(no modules compiled)
+
+
+parfib
+(no modules compiled)
+
+
+partree
+(no modules compiled)
+
+
+prsa
+(no modules compiled)
+
+
+queens
+(no modules compiled)
+
+
+ray
+(no modules compiled)
+
+
+sumeuler
+(no modules compiled)
+
+
+transclos
+(no modules compiled)
+
+
+        -1 s.d.     
+        +1 s.d.     
+        Average     

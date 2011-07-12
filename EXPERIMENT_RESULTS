@@ -1,5 +1,26 @@
 Two-core machine, Intel P6100 @2.00GHz, no hyperthreading, 8G RAM.
 
+The experiment results are in files EXP_*, generated as follows:
+
+nofib-analyse nofib-log-l-as nofib-log-l-asp > EXP_-l-as_TO_-l-asp
+nofib-analyse nofib-log-l-as nofib-log-l-asf > EXP_-l-as_TO_-l-asf
+nofib-analyse nofib-log-l-asp nofib-log-l-asf > EXP_-l-asp_TO_-l-asf
+
+from logs of the nofib benchmark, after a warm-up run, compiled with
+
+export WithNofibHc=ghc
+export EXTRA_HC_OPTS="-threaded -eventlog"
+
+and run with, respectively,
+
+export EXTRA_RUNTEST_OPTS="+RTS -l-as -N2 -RTS"
+export EXTRA_RUNTEST_OPTS="+RTS -l-asp -N2 -RTS"
+export EXTRA_RUNTEST_OPTS="+RTS -l-asf -N2 -RTS"
+
+
+-----------------------------------------------------------
+Below are old results, measured by hand on parlist and ray.
+
 Both programs take much longer with -N2 than -N1, probably because
 of massive spark stealing (probably no spark is run on the same
 HEC that created it --- they exchange roles, but one always creates sparks,
