@@ -1,4 +1,4 @@
-pristine:0000001864-b860f2c939585f62c53443be8397d01cb8e0570ed3a695d3c6b4bb1fa2d2c09e
+pristine:0000001864-98950b98b5de628f2921b464af059f2b87cc712a1d60cacacc8c7d9a53d29789
 Starting with inventory:
 0000057931-abac2ae96674d7ba725832fd35d1a3a29979b5da1f1bffa834058446f884179b
 [TAG 0.1.2
@@ -478,6 +478,11 @@ Simon Marlow <marlowsd@gmail.com>**20110526123341
  Ignore-this: 2d81e85e6cb4723bac99428ee842f4a4
 ] 
 hash: 0000000287-c6c1ba85b13ce4d73df8930841a4407322ca652d17ccd987630340ba9cfd02f0
+[Turns out we need gtk-0.12
+Duncan Coutts <duncan@well-typed.com>**20110602152304
+ Ignore-this: 2c6c52489591d254f442bb3abcde68f5
+] 
+hash: 0000000268-8ca9ac3ed3076866283804a70650b355bf77950c8f65797595203770b593fbc0
 [datatype of tree of spark counters and it's constructor
 mikolaj.konarski@gmail.com**20110617180100
  Ignore-this: d8dbb1c8fbeca4bc7d5fd79821e1e3b0
@@ -740,6 +745,31 @@ mikolaj.konarski@gmail.com**20110629150901
  Ignore-this: 26fc8c51bd58dd978044c13006593a77
 ] 
 hash: 0000000434-9c7a54e335382c29002527ce3cb5d281bffac92248988e4bdf1fdef84c755089
+[Update to match latest ghc-events api version
+Duncan Coutts <duncan@well-typed.com>**20110718151250
+ Ignore-this: caafda64790f285448b7bf6148fc3db6
+] 
+hash: 0000000844-05c40ae8072fed560d81fe9afef2dd2263de741dfd48cd35a060ba6985e12005
+[Sort out the metadata in the .cabal file
+Duncan Coutts <duncan@well-typed.com>**20110718152247
+ Ignore-this: aee195356d8d43aa37b13acdfa41505
+] 
+hash: 0000001627-3fe123309847e6ab10a54a5510cffb0202930df7678aa8c0d3fb8fc2d5ee08af
+[Draw the new spark events as instant events in the HEC timelines
+Duncan Coutts <duncan@well-typed.com>**20110718202650
+ Ignore-this: ed994999bee45731d0c53ac432051c8c
+] 
+hash: 0000001051-f44a91683906b1bff192be6ee3e7bc1cac18fe95aaff129358f97b1f7069338f
+[Add labels for the new spark graphs
+Duncan Coutts <duncan@well-typed.com>**20110718202956
+ Ignore-this: 5698609393a972cc24ae7948cf0bfcbe
+] 
+hash: 0000000565-d7ab84a84e7639dbae1fcf6338dad8b0732062be7cf371f8587d0bf111b3543c
+[Move the spark rendering code into its own module
+Duncan Coutts <duncan@well-typed.com>**20110718204940
+ Ignore-this: eb8fa94b79998d24f62c3923f77ae54a
+] 
+hash: 0000019200-a6c06df355bbdffe2883a469c7577fd23bcc3c9a358db770d9febf2bccf0bccc
 [make all the itroduced types private
 mikolaj.konarski@gmail.com**20110701202545
  Ignore-this: 372b821591d4578b83058311064dad95
@@ -769,4 +799,9 @@ hash: 0000008721-ecbcf02dc87c04bf1215c9e9a345fb0bd039d4f4712fc4603d1f7f00421a569
 mikolaj.konarski@gmail.com**20110702145256
  Ignore-this: c672077024b937517add136746352ed5
 ] 
-hash: 0000001659-08c100c83b268f678efda585de5b6ec8d3493bc2c0e305a22066b2808f253870
+hash: 0000068984-91ccd069f71ded64f244d772431760e1e19f05937898295a8cef4c6f1f94c600
+[resolve the patch conflict from the refactoring and the in-code docs improvement
+mikolaj.konarski@gmail.com**20110805073654
+ Ignore-this: 684d3e1e897c212d64f93e4996bd1bb2
+] 
+hash: 0000010563-f49ae6f05ecff6abb945fa14c70b4dac3e7f441d5c29eed0ca0f125c75b07e57

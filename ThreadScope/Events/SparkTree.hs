@@ -196,8 +196,7 @@ sparkProfile slice start0 end0 t
    -- taking the 'previous' argument
    chopped0 = chop undefined [] start flat
 
-   chopped | null flat      = []
-           | start0 < slice = SparkStats.initial : chopped0
+   chopped | start0 < slice = SparkStats.initial : chopped0
            | otherwise      = chopped0
 
    flatten :: Timestamp -> SparkTree -> [SparkTree] -> [SparkTree]
