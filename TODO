@@ -1,6 +1,6 @@
 Soon:
 
-fix the scarcity of sample data for cap 1 in our example event log
+[GUI] I see "Spark poo size" with my Ubuntu gtk fonts
 
 resample (morally) uniformly, before doing the percentiles --- but then
 it's a mean, not a median any more, with enough sample points;
@@ -33,8 +33,6 @@ that the _areas_ are proportional to the total number and graphs to rates
 
 [GUI] either fix tickboxes for HEC sets or make it two dimensional: one column
 of tickboxes for activity, one column for spark creation, spark conversion
-
-
 
 Later:
 
