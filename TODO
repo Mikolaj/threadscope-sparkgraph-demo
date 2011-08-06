@@ -1,16 +1,20 @@
 Soon:
 
-[GUI] I see "Spark poo size" with my Ubuntu gtk fonts
-
-resample (morally) uniformly, before doing the percentiles --- but then
-it's a mean, not a median any more, with enough sample points;
-however percentiles still make sense --- they are not just mean*(n/m),
-e.g., for y=5, all percentiles are 5, while for y=x, from 0 to 10,
-they differ, regardless of sample destity and uniformity, except trivial cases
+[GUI] I see "Spark poo size" as the left hand size label of the pool graphs,
+with my Ubuntu gtk fonts
 
 25%/50%/75% percentile for pool size, in gnuplot or, if easy, in threadscope
 http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.10.6199
 figure 15
+
+resample the data (morally) uniformly, unless the sampling
+is changed from GC time points to equal intervals
+(note that with resampling, with enough extra inserted sample points,
+the median approaches the mean, so calculating the median for pool size
+does not make sense; however, percentiles still make sense --- they are
+not just mean*(n/m), e.g., for y=5, all percentiles are 5,
+while for y=x, from 0 to 10, they differ, regardless of sample destity
+and uniformity, except trivial cases)
 
 remove the grey halo in trivial cases of pool size,
 like the line:  ___/----, but keep min/max for ___/\___
@@ -36,6 +40,14 @@ of tickboxes for activity, one column for spark creation, spark conversion
 
 Later:
 
+consider adding the RUN/STEAL distinction, from the the fully accurate events,
+to the samples events counters and then visualizing it with color shads
+or separate curves
+
+perhaps draw the graps even if only the fully-accurate,
+per-spark events are present in the logs (by transforming them
+to the sampled format)
+
 the same aggregate style for the activity graph, to see min/max
 (the green are does not convey any extra information, unlike
 the tricolour areas in rate graphs)
@@ -49,13 +61,12 @@ reorder them by just dragging and dropping
 
 and/or extrapolate data for large zoom levels with scarce samples
 by slated lines, not just horizontal lines (which work great with
-numerous samples, though)
+numerous enough samples, though)
 
 merge adjacent 0 samples:
 if we have equal adjacent samples we just take the second/last
-can be done when it's still a list, before making the tree
-simple linear pass
-and lazy too
+can be done when it's still a list, before making the tree;
+simple linear pass, and lazy too;
 does not make sense in per-spark events mode
 
 use the extra info about when the spark pool gets full and empty;
@@ -82,17 +93,6 @@ or increase the accuracy by dividing increments not by the slice
 length (implicitly), but the length of the sum of tree node spans
 that cover the slice, similarly as in gnuplot graphs
 
-collect info about the evaluation time of each spark,
-probably via precise per-spark events and then deducing
-the indentity of sparks by comparing the precise timestamps
-
-do precise per-spark events, at least to do some performance testing
-to see if it's too expensive (<@dcoutts> I suspect that matching spark
-evaluation back to creation/conversion time will require spark ids
-and per-spark events); benchmark it with the raytrace benchmark
-from the parfib suite; run with no spark sampling, with spark sampling,
-and with full spark events
-
 perhaps we should change the spark event sampling to emit events
 every N sparks rather than at GC; but only if experiments (do more accurate
 sampling and compare the general look of the graphs)
@@ -109,8 +109,7 @@ of sparks represented by the pixel/line (started/converted there))
 or via scaling the creation/conversion graphs by the spark size
 (instead of the area being the number of sparks,
 it's proportional to the amount of work (ie eval time)
-of the sparks in the interval); dcoutts has got a patch to turn spark
-events on/off as an +RTS -l  flag
+of the sparks in the interval)
 
 test, in particular the quality of sampling, on the parfib suite
 
