@@ -18,6 +18,9 @@ and uniformity, except trivial cases)
 
 remove the grey halo in trivial cases of pool size,
 like the line:  ___/----, but keep min/max for ___/\___
+Note: this is already fixed, at the cost of visually too bigr grey area,
+because of not enough samples at some place; final fix will be resampling
+or measuring at equal intervals
 
 draw the scales (horizontal and vertical) in such a way that they're
 always visible, regardless of scrolling
