@@ -66,8 +66,7 @@ renderSparkPool params@ViewParameters{..} !start0 !end0 t !maxSparkPool = do
       f4 c = SparkStats.pool75 c
       f5 c = SparkStats.poolMax c
   addSparks outerPercentilesColour maxSparkPool f1 f2 start slice prof
-  addSparks innerPercentilesColour maxSparkPool f2 f3 start slice prof
-  addSparks innerPercentilesColour maxSparkPool f3 f4 start slice prof
+  addSparks innerPercentilesColour maxSparkPool f2 f4 start slice prof
   addSparks outerPercentilesColour maxSparkPool f4 f5 start slice prof
   outlineSparks maxSparkPool f3 start slice prof
   outlineSparks maxSparkPool (const 0) start slice prof
