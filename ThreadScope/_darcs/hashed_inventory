@@ -1,4 +1,4 @@
-pristine:0000001864-98950b98b5de628f2921b464af059f2b87cc712a1d60cacacc8c7d9a53d29789
+pristine:0000001864-f33003e87a98b3e4ee4ee9026d71e58aa6f7e1ce39fd3e50dd7d9ac24a06da05
 Starting with inventory:
 0000057931-abac2ae96674d7ba725832fd35d1a3a29979b5da1f1bffa834058446f884179b
 [TAG 0.1.2
@@ -805,3 +805,23 @@ mikolaj.konarski@gmail.com**20110805073654
  Ignore-this: 684d3e1e897c212d64f93e4996bd1bb2
 ] 
 hash: 0000010563-f49ae6f05ecff6abb945fa14c70b4dac3e7f441d5c29eed0ca0f125c75b07e57
+[fix a crash when redrawing right ends of graphs
+mikolaj.konarski@gmail.com**20110808080335
+ Ignore-this: 2b91e3845610b3e61ee45c5c84be6e9b
+] 
+hash: 0000001156-95f6153cbf4e81282c4a5d703d01c6ed05d1a7100925fbae5226876a0e1fca62
+[fix no redraw of horizontal dashed lines when zoomed in
+mikolaj.konarski@gmail.com**20110808080445
+ Ignore-this: b5ce410247c88b844346a9d00590f9b8
+] 
+hash: 0000001648-b6d2b7c7a1a228bec018fa591c61ddf12d0de5a78cef44afc44a45109e443269
+[move back to using pool size durations centered around samples; add justification
+mikolaj.konarski@gmail.com**20110808081401
+ Ignore-this: 6c6d5cf84a888b4eb8a3d727a9b64880
+] 
+hash: 0000001178-ed9fe7cb989243f70a5fdbfc0c01744a928b3c52729a2dd9fe9d998bd951473d
+[mock up percentiles display for the pools size
+mikolaj.konarski@gmail.com**20110808083120
+ Ignore-this: 3f29ca6213edc7d71a2c5cf6b1ca969b
+] 
+hash: 0000003810-28067e52c8e2461c87b3993a946953403f8e590019683f40bd292b1ab8518512
