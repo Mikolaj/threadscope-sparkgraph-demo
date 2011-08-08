@@ -74,7 +74,7 @@ mediumGrey :: Color
 mediumGrey = Color 0xB000 0xB000 0xB000
 
 lightGrey :: Color
-lightGrey = Color 0xD000 0xD000 0xD000
+lightGrey = Color 0xE000 0xE000 0xE000
 
 red :: Color
 red = Color 0xFFFF 0 0
