@@ -3,7 +3,7 @@ Soon:
 [GUI] I see "Spark poo size" as the left hand size label of the pool graphs,
 with my Ubuntu gtk fonts
 
-25%/50%/75% percentile for pool size, in gnuplot or, if easy, in threadscope
+25%/50%/75% percentiles for pool size, see
 http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.10.6199
 figure 15
 WARNING: unlike mean, the median and other percentiles can't be computed
@@ -21,7 +21,15 @@ if the tree stores the whole data at each tree level, already partitioned
 and the data for each slice may be gathered cheaply (but a bit inaccurately,
 see the use of SparkStats.rescale in the current code) by only looking
 at a few nodes of the tree at a single level, instead of traversing
-a very long list.
+a very long list. There are better data structures than the spark tree
+for quick lookup of sorted data, so let's remove the pool sizes from
+the spark tree altogether and hack them separately.
+IDEA (dcoutts): http://en.wikipedia.org/wiki/Mipmap,
+basic idea is that we store something like a bitmap
+(perhaps just 1D) at multiple resolutions
+and resample from the nearest pre-computed bitmap;
+which incidentally might be a good technique generally
+might even take less memory than the current method
 
 resample the data (morally) uniformly, unless the sampling
 is changed from GC time points to equal intervals

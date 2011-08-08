@@ -1,4 +1,4 @@
-pristine:0000001864-1634717d02e6e91e766208cd68f24c55ba7760c0f804c4e01b58d9ecb24c7630
+pristine:0000001864-7f795b33ebaecaa7e4889bd4b83c480cdb6cbc484ef7cb625bcbc1effd287ea5
 Starting with inventory:
 0000057931-abac2ae96674d7ba725832fd35d1a3a29979b5da1f1bffa834058446f884179b
 [TAG 0.1.2
@@ -835,3 +835,8 @@ mikolaj.konarski@gmail.com**20110808095231
  Ignore-this: 99c8b4556f02d3bef18d67d852585d8e
 ] 
 hash: 0000003849-2ba9d38a69b8c820061878701f8c59467f89fb38c58c769bb870a5ae90ed7550
+[turn off, for the release, the mock-up of percentiles for spark pool size
+mikolaj.konarski@gmail.com**20110808135027
+ Ignore-this: c18d7734963109f69723b19d314e55b8
+] 
+hash: 0000000480-635377825937b37fed4388127c614a9fdef3cd50661744f5c738f0cd0c580bad

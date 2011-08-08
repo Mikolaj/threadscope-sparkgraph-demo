@@ -86,9 +86,9 @@ aggregate l =
   -- TODO: this is only a mockup: p25, p50 and p75 are crude approximations
   let mms  = L.sort $ map pool25 l ++ map pool50 l ++ map pool75 l
       pMin = minimum (map poolMin l)
-      p25  = mms L.!! (length mms `div` 4)
+      p25  = p50  -- percentiles disabled  mms L.!! (length mms `div` 4)
       p50  = sum (map pool50 l) / fromIntegral (length l)
-      p75  = mms L.!! ((3 * length mms) `div` 4)
+      p75  = p50  -- percentiles disabled  mms L.!! ((3 * length mms) `div` 4)
       pMax = maximum (map poolMax l)
   in foldStats (+) pMin p25 p50 p75 pMax l
 
