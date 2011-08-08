@@ -6,6 +6,22 @@ with my Ubuntu gtk fonts
 25%/50%/75% percentile for pool size, in gnuplot or, if easy, in threadscope
 http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.10.6199
 figure 15
+WARNING: unlike mean, the median and other percentiles can't be computed
+from percentiles of subnodes of the trees --- they need the whole data
+for the interval in question at each level of the tree. This increases
+the cost from O(n) to O(n * log n), where n is the total number of samples.
+Additional log n factor, in comparison with mean, is probably inevitable
+unless we put the data in an array, because otherwise we have to
+sort the data for each interval to find the k-th element.
+An extra problem is that to get accurate percentiles for splices
+that do not match a single subtree node, we have to get the whole
+data for the splice again, completely repeating the calculations.
+Then the preprocessing via creating the tree would only be useful
+if the tree stores the whole data at each tree level, already partitioned
+and the data for each slice may be gathered cheaply (but a bit inaccurately,
+see the use of SparkStats.rescale in the current code) by only looking
+at a few nodes of the tree at a single level, instead of traversing
+a very long list.
 
 resample the data (morally) uniformly, unless the sampling
 is changed from GC time points to equal intervals
@@ -13,14 +29,11 @@ is changed from GC time points to equal intervals
 the median approaches the mean, so calculating the median for pool size
 does not make sense; however, percentiles still make sense --- they are
 not just mean*(n/m), e.g., for y=5, all percentiles are 5,
-while for y=x, from 0 to 10, they differ, regardless of sample destity
+while for y=x, from 0 to 10, they differ, regardless of sample density
 and uniformity, except trivial cases)
 
 remove the grey halo in trivial cases of pool size,
 like the line:  ___/----, but keep min/max for ___/\___
-Note: this is already fixed, at the cost of visually too bigr grey area,
-because of not enough samples at some place; final fix will be resampling
-or measuring at equal intervals
 
 draw the scales (horizontal and vertical) in such a way that they're
 always visible, regardless of scrolling
@@ -41,13 +54,15 @@ that the _areas_ are proportional to the total number and graphs to rates
 [GUI] either fix tickboxes for HEC sets or make it two dimensional: one column
 of tickboxes for activity, one column for spark creation, spark conversion
 
+
+
 Later:
 
 consider adding the RUN/STEAL distinction, from the the fully accurate events,
-to the samples events counters and then visualizing it with color shads
+to the samples events counters and then visualizing it with color shades
 or separate curves
 
-perhaps draw the graps even if only the fully-accurate,
+perhaps draw the graphs even if only the fully-accurate,
 per-spark events are present in the logs (by transforming them
 to the sampled format)
 
@@ -103,11 +118,11 @@ show that linear extrapolation of the GC data is not correct
 (large spark transitions happen in the long periods between GC
 and we don't know when exactly) (the 4K pool size guarantees that at least
 with large visible absolute spark transition, the invisible transitions
-can't be huge in proportion to the visible ones, so then linear extrapolaton
+can't be huge in proportion to the visible ones, so then linear extrapolation
 is correct))
 
 integrate info about the time taken by sparks, via shades of green
-(a shade per pixel of vertical iine, indicating the average size
+(a shade per pixel of vertical line, indicating the average size
 of sparks represented by the pixel/line (started/converted there))
 or via scaling the creation/conversion graphs by the spark size
 (instead of the area being the number of sparks,
@@ -122,7 +137,7 @@ Far future:
 
 [GUI] animate zoom level transitions:
 ways to make the zoom in/out less confusing for users
-(e.g. the sudden appearance of spikyness once thresholds)
+(e.g. the sudden appearance of spikiness once thresholds)
 animating the transitions would make it clearer
 generate the bitmap of the higher resolution new view,
 and animate it expanding to cover the new view
@@ -189,7 +204,7 @@ for events defined and implemented
 
 Unrelated threadscope bugs:
 
-the vertical blue line vanishes is some zoom levels
+the vertical blue cursor line vanishes is some zoom levels
 
 sideways scrolling leaves artifacts (e.g., the thicker fragments of the flat line at the end of the Activity graph)
 
@@ -201,8 +216,12 @@ may be a feature: filling graphs with colours is from line 1 upwards,
 not line 0, so lines at level 0 seem under the filled area, not level with it
 
 the light blue vertical lines get sometimes randomly darker when scrolling
-by moving the scrollbar handle to the right
+by moving the scrollbar handle to the right probably caused by testing
+an x coordinate up to integral division by slice, so the line is drawn
+many times when scrolling
 
 a few levels of zoom in and then zoom out sometimes results in only
 a right fragment of the timeline are shown, no indication in the scrollbar
-that scroll is possible, but scrolling indeed fixes the view
+that scroll is possible, but scrolling indeed fixes the view;
+perhaps we could abandon the clever redrawing altogether and draw
+everything at once?
