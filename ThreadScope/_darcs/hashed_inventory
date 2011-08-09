@@ -1,4 +1,4 @@
-pristine:0000001864-0831c3f874e0adb3912dce8d67ac5bd0938d5f685781bfd67126f704a772a74a
+pristine:0000001864-04fe193cefb65408a24ee986f28e01f70c79333ef77ba3f0676999d5bd3d40fd
 Starting with inventory:
 0000057931-abac2ae96674d7ba725832fd35d1a3a29979b5da1f1bffa834058446f884179b
 [TAG 0.1.2
@@ -845,3 +845,8 @@ Mikolaj Konarski <mikolaj@well-typed.com>**20110809080652
  Ignore-this: cf5df0ee098d0b0676614eeb01f0979
 ] 
 hash: 0000000360-087070012b4f74b4eda112b3a4ac2679aa8e60b713ae8f47871a3ab8f317d43e
+[merge threadscope-sparkgraph-demo TODO into ThreadScope TODO
+Mikolaj Konarski <mikolaj@well-typed.com>**20110809083257
+ Ignore-this: 9eed300d914ebab7f7a8c309e4b10610
+] 
+hash: 0000010312-569a075484bfc545e8bf1ac1f0a305b1396c14be9a193b008d64c6386ee1c567
