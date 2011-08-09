@@ -1,7 +1,15 @@
 Soon:
 
+fix, rewrite or disable partial redrawing of the graphs pane
+that causes many of the graphical bugs reported in ThreadScope/TODO
+
 [GUI] I see "Spark poo size" as the left hand size label of the pool graphs,
-with my Ubuntu gtk fonts
+with my Ubuntu gtk fonts; explanation: it's the wrapping
+or rather the lack thereof; the wrapping is currently manual when
+it should be automatic; what we should do is to calculate the width
+based on the label size and let it do automatic wrapping
+FOR NOW: increase the space available for the label
+or change the manual wrapping
 
 25%/50%/75% percentiles for pool size, see
 http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.10.6199
@@ -65,10 +73,6 @@ of tickboxes for activity, one column for spark creation, spark conversion
 
 
 Later:
-
-consider adding the RUN/STEAL distinction, from the the fully accurate events,
-to the samples events counters and then visualizing it with color shades
-or separate curves
 
 perhaps draw the graphs even if only the fully-accurate,
 per-spark events are present in the logs (by transforming them
