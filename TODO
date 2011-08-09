@@ -3,13 +3,13 @@ Soon:
 fix, rewrite or disable partial redrawing of the graphs pane
 that causes many of the graphical bugs reported in ThreadScope/TODO
 
-[GUI] I see "Spark poo size" as the left hand size label of the pool graphs,
+[GUI] (temporarily fixed on my display by increasing
+timeline_labels_drawingarea width from 80 to 100)
+I see "Spark poo size" as the left hand size label of the pool graphs,
 with my Ubuntu gtk fonts; explanation: it's the wrapping
 or rather the lack thereof; the wrapping is currently manual when
 it should be automatic; what we should do is to calculate the width
 based on the label size and let it do automatic wrapping
-FOR NOW: increase the space available for the label
-or change the manual wrapping
 
 25%/50%/75% percentiles for pool size, see
 http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.10.6199
