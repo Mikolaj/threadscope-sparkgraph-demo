@@ -1,32 +1,27 @@
 module Events.SparkStats (
   SparkStats(rateCreated, rateDud, rateOverflowed,
              rateConverted, rateFizzled, rateGCd,
-             poolMin, pool25, pool50, pool75, poolMax),
+             meanPool, maxPool, minPool),
   initial, create, rescale, aggregate, agEx,
   ) where
 
 import Data.Word (Word64)
-import qualified Data.List as L
 
 -- | Sparks change state. Each state transition process has a duration.
 -- Spark statistics, for a given duration, record the spark transition rate
 -- (the number of sparks that enter a given state within the interval)
--- and the absolute minimal and maximal number of sparks
--- in the spark pool within the duration and their statistical percentiles
--- (TODO: the percentiles are only crude approximations;
--- in particular, the median is here really a mean, which is correct only
--- if we do a very fine-grained resampling first).
+-- and the absolute mean, maximal and minimal number of sparks
+-- in the spark pool within the duration.
 data SparkStats =
-  SparkStats
-    { rateCreated, rateDud, rateOverflowed,
-      rateConverted, rateFizzled, rateGCd,
-      poolMin, pool25, pool50, pool75, poolMax :: {-# UNPACK #-}!Double }
+  SparkStats { rateCreated, rateDud, rateOverflowed,
+               rateConverted, rateFizzled, rateGCd,
+               meanPool, maxPool, minPool :: {-# UNPACK #-}!Double }
   deriving (Show, Eq)
 
 -- | Initial, default value of spark stats, at the start of runtime,
 -- before any spark activity is recorded.
 initial :: SparkStats
-initial = SparkStats 0 0 0 0 0 0 0 0 0 0 0
+initial = SparkStats 0 0 0 0 0 0 0 0 0
 
 -- | Create spark stats for a duration, given absolute
 -- numbers of sparks in all categories at the start and end of the duration.
@@ -55,13 +50,13 @@ create (crt1, dud1, ovf1, cnv1, fiz1, gcd1, remaining1)
          fromIntegral $ fiz2 - fiz1,
          fromIntegral $ gcd2 - gcd1)
       p = fromIntegral remaining1
-  in SparkStats crt dud ovf cnv fiz gcd p p p p p
+  in SparkStats crt dud ovf cnv fiz gcd p p p
 
 -- | Reduce a list of spark stats; spark pool stats are overwritten.
 foldStats :: (Double -> Double -> Double)
-             -> Double -> Double -> Double -> Double -> Double
+             -> Double -> Double -> Double
              -> [SparkStats] -> SparkStats
-foldStats f pMin p25 p50 p75 pMax l
+foldStats f meanP maxP minP l
   = SparkStats
       (foldr f 0 (map rateCreated l))
       (foldr f 0 (map rateDud l))
@@ -69,13 +64,13 @@ foldStats f pMin p25 p50 p75 pMax l
       (foldr f 0 (map rateConverted l))
       (foldr f 0 (map rateFizzled l))
       (foldr f 0 (map rateGCd l))
-      pMin p25 p50 p75 pMax
+      meanP maxP minP
 
 -- | Rescale the spark transition stats, e.g., to change their units.
 rescale :: Double -> SparkStats -> SparkStats
 rescale scale s =
   let f w _ = scale * w
-  in foldStats f (poolMin s) (pool25 s) (pool50 s) (pool75 s) (poolMax s) [s]
+  in foldStats f (meanPool s) (maxPool s) (minPool s) [s]
 
 -- | Derive spark stats for an interval from a list of spark stats,
 -- in reverse chronological order, of consecutive subintervals
@@ -83,14 +78,10 @@ rescale scale s =
 aggregate :: [SparkStats] -> SparkStats
 aggregate [s] = s  -- optimization
 aggregate l =
-  -- TODO: this is only a mockup: p25, p50 and p75 are crude approximations
-  let mms  = L.sort $ map pool25 l ++ map pool50 l ++ map pool75 l
-      pMin = minimum (map poolMin l)
-      p25  = p50  -- percentiles disabled  mms L.!! (length mms `div` 4)
-      p50  = sum (map pool50 l) / fromIntegral (length l)
-      p75  = p50  -- percentiles disabled  mms L.!! ((3 * length mms) `div` 4)
-      pMax = maximum (map poolMax l)
-  in foldStats (+) pMin p25 p50 p75 pMax l
+  let meanP = sum (map meanPool l) / fromIntegral (length l) -- TODO: inaccurate
+      maxP  = maximum (map maxPool l)
+      minP  = minimum (map minPool l)
+  in foldStats (+) meanP maxP minP l
 
 -- | Extrapolate spark stats from previous data.
 -- Absolute pools size values extrapolate by staying constant,
@@ -99,7 +90,7 @@ aggregate l =
 extrapolate :: SparkStats -> SparkStats
 extrapolate s =
   let f w _ = 0 * w
-  in foldStats f (poolMin s) (pool25 s) (pool50 s) (pool75 s) (poolMax s) [s]
+  in foldStats f (meanPool s) (maxPool s) (minPool s) [s]
 
 -- | Aggregate, if any data provided. Extrapolate from previous data, otherwise.
 -- In both cases, the second component is the new choice of "previous data".

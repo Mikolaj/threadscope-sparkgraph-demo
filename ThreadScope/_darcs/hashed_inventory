@@ -1,4 +1,4 @@
-pristine:0000001864-04fe193cefb65408a24ee986f28e01f70c79333ef77ba3f0676999d5bd3d40fd
+pristine:0000001864-f023c7c45d11861518dad0647b223212c9412abb1ca7a072b29384a360fefce8
 Starting with inventory:
 0000057931-abac2ae96674d7ba725832fd35d1a3a29979b5da1f1bffa834058446f884179b
 [TAG 0.1.2
@@ -830,16 +830,6 @@ mikolaj.konarski@gmail.com**20110808085857
  Ignore-this: 2e4283193e11c7d09ac871052443d5ec
 ] 
 hash: 0000001194-f010de7a534a011fd5f235bf2cd4c99adda7c6f6018cbb5675b5e52f6f428086
-[mock up percentiles display for the pools size
-mikolaj.konarski@gmail.com**20110808095231
- Ignore-this: 99c8b4556f02d3bef18d67d852585d8e
-] 
-hash: 0000003849-2ba9d38a69b8c820061878701f8c59467f89fb38c58c769bb870a5ae90ed7550
-[turn off, for the release, the mock-up of percentiles for spark pool size
-mikolaj.konarski@gmail.com**20110808135027
- Ignore-this: c18d7734963109f69723b19d314e55b8
-] 
-hash: 0000000480-635377825937b37fed4388127c614a9fdef3cd50661744f5c738f0cd0c580bad
 [a temporary fix for "Spark poo" in labels area with some fonts
 Mikolaj Konarski <mikolaj@well-typed.com>**20110809080652
  Ignore-this: cf5df0ee098d0b0676614eeb01f0979

@@ -60,15 +60,12 @@ renderSparkPool params@ViewParameters{..} !start0 !end0 t !maxSparkPool = do
       start = (start0 `div` slice) * slice
       end   = ((end0 + slice) `div` slice) * slice
       prof  = sparkProfile slice start end t
-      f1 c = SparkStats.poolMin c
-      f2 c = SparkStats.pool25 c
-      f3 c = SparkStats.pool50 c
-      f4 c = SparkStats.pool75 c
-      f5 c = SparkStats.poolMax c
+      f1 c = SparkStats.minPool c
+      f2 c = SparkStats.meanPool c
+      f3 c = SparkStats.maxPool c
   addSparks outerPercentilesColour maxSparkPool f1 f2 start slice prof
-  addSparks innerPercentilesColour maxSparkPool f2 f4 start slice prof
-  addSparks outerPercentilesColour maxSparkPool f4 f5 start slice prof
-  outlineSparks maxSparkPool f3 start slice prof
+  addSparks outerPercentilesColour maxSparkPool f2 f3 start slice prof
+  outlineSparks maxSparkPool f2 start slice prof
   outlineSparks maxSparkPool (const 0) start slice prof
   addScale params maxSparkPool start end
 

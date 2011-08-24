@@ -59,9 +59,6 @@ overflowedColour       = red
 outerPercentilesColour :: Color
 outerPercentilesColour = lightGrey
 
-innerPercentilesColour :: Color
-innerPercentilesColour = mediumGrey
-
 -------------------------------------------------------------------------------
 
 black :: Color
@@ -70,11 +67,8 @@ black = Color 0 0 0
 grey :: Color
 grey = Color 0x8000 0x8000 0x8000
 
-mediumGrey :: Color
-mediumGrey = Color 0xB000 0xB000 0xB000
-
 lightGrey :: Color
-lightGrey = Color 0xE000 0xE000 0xE000
+lightGrey = Color 0xD000 0xD000 0xD000
 
 red :: Color
 red = Color 0xFFFF 0 0

@@ -38,7 +38,7 @@ eventsToSparkDurations es =
                 delta = SparkStats.create startCounters endCounters
                 duration = endTime - startTime
                 newMaxSparkValue = maxSparkRenderedValue delta duration
-                newMaxSparkPool = SparkStats.poolMax delta
+                newMaxSparkPool = SparkStats.maxPool delta
                 sd = SparkDuration { startT = startTime,
                                      deltaC = delta }
                 ((oldMaxSparkValue, oldMaxSparkPool), l) =
